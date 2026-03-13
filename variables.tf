@@ -1,0 +1,210 @@
+variable "demo_policy_name" {
+  type        = string
+  description = "(Optional) Name of the Vault policy for UI certificate issuance demo access."
+  default     = "pki-demo-ui-issuer"
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9_-]*$", var.demo_policy_name))
+    error_message = "`demo_policy_name` must start with an alphanumeric character and contain only alphanumeric characters, underscores, or hyphens."
+  }
+}
+
+variable "namespace_path" {
+  type        = string
+  description = "(Optional) The path of the namespace. Must not have a trailing `/`."
+  default     = "pki-demo"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9-]*[a-z0-9]$", var.namespace_path))
+    error_message = "`namespace_path` must contain only lowercase letters, numbers, and hyphens, and must start and end with an alphanumeric character."
+  }
+}
+
+variable "pki_allowed_domains" {
+  type        = list(string)
+  description = "(Optional) Domains allowed for certificate issuance from the intermediate role."
+  default     = ["demo.example.com"]
+
+  validation {
+    condition = length(var.pki_allowed_domains) > 0 && alltrue([
+      for domain_name in var.pki_allowed_domains : can(regex("^([*][.])?[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)+$", domain_name))
+    ])
+    error_message = "`pki_allowed_domains` must contain at least one valid DNS domain name (wildcards like `*.example.com` are allowed)."
+  }
+}
+
+variable "pki_cert_max_ttl" {
+  type        = string
+  description = "(Optional) Maximum TTL for certificates issued by the intermediate PKI role."
+  default     = "720h"
+
+  validation {
+    condition     = can(regex("^[1-9][0-9]*[smhd]$", var.pki_cert_max_ttl))
+    error_message = "`pki_cert_max_ttl` must be a positive duration like `72h`, `30m`, or `7d`."
+  }
+}
+
+variable "pki_cert_ttl" {
+  type        = string
+  description = "(Optional) Default TTL for certificates issued by the intermediate PKI role."
+  default     = "72h"
+
+  validation {
+    condition     = can(regex("^[1-9][0-9]*[smhd]$", var.pki_cert_ttl))
+    error_message = "`pki_cert_ttl` must be a positive duration like `72h`, `30m`, or `7d`."
+  }
+}
+
+variable "pki_intermediate_ca_ttl" {
+  type        = string
+  description = "(Optional) TTL for the intermediate CA certificate signed by the root CA."
+  default     = "43800h"
+
+  validation {
+    condition     = can(regex("^[1-9][0-9]*[smhd]$", var.pki_intermediate_ca_ttl))
+    error_message = "`pki_intermediate_ca_ttl` must be a positive duration like `43800h` or `365d`."
+  }
+}
+
+variable "pki_intermediate_common_name" {
+  type        = string
+  description = "(Optional) Common Name used for the intermediate CA generated in the demo PKI hierarchy."
+  default     = "demo.example.com Intermediate CA"
+
+  validation {
+    condition     = length(trimspace(var.pki_intermediate_common_name)) > 2
+    error_message = "`pki_intermediate_common_name` must not be empty."
+  }
+}
+
+variable "pki_intermediate_default_lease_ttl_seconds" {
+  type        = number
+  description = "(Optional) Default lease TTL for the intermediate PKI mount in seconds."
+  default     = 2592000
+
+  validation {
+    condition     = var.pki_intermediate_default_lease_ttl_seconds > 0
+    error_message = "`pki_intermediate_default_lease_ttl_seconds` must be greater than 0."
+  }
+}
+
+variable "pki_intermediate_max_lease_ttl_seconds" {
+  type        = number
+  description = "(Optional) Maximum lease TTL for the intermediate PKI mount in seconds."
+  default     = 157680000
+
+  validation {
+    condition     = var.pki_intermediate_max_lease_ttl_seconds > 0
+    error_message = "`pki_intermediate_max_lease_ttl_seconds` must be greater than 0."
+  }
+}
+
+variable "pki_intermediate_mount_path" {
+  type        = string
+  description = "(Optional) Path where the intermediate PKI secrets engine is enabled in the child namespace."
+  default     = "pki-int"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9-]*[a-z0-9]$", var.pki_intermediate_mount_path))
+    error_message = "`pki_intermediate_mount_path` must contain only lowercase letters, numbers, and hyphens, and must start and end with an alphanumeric character."
+  }
+}
+
+variable "pki_intermediate_namespace_path" {
+  type        = string
+  description = "(Optional) Child namespace name under the demo namespace where intermediate PKI resources are provisioned."
+  default     = "pki-intermediate"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9-]*[a-z0-9]$", var.pki_intermediate_namespace_path))
+    error_message = "`pki_intermediate_namespace_path` must contain only lowercase letters, numbers, and hyphens, and must start and end with an alphanumeric character."
+  }
+}
+
+variable "pki_role_name" {
+  type        = string
+  description = "(Optional) Role name used by the UI to issue certificates from the intermediate PKI engine."
+  default     = "ui-issuer"
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9_-]*$", var.pki_role_name))
+    error_message = "`pki_role_name` must start with an alphanumeric character and contain only alphanumeric characters, underscores, or hyphens."
+  }
+}
+
+variable "pki_root_ca_ttl" {
+  type        = string
+  description = "(Optional) TTL for the self-signed root CA certificate used to sign the intermediate."
+  default     = "87600h"
+
+  validation {
+    condition     = can(regex("^[1-9][0-9]*[smhd]$", var.pki_root_ca_ttl))
+    error_message = "`pki_root_ca_ttl` must be a positive duration like `87600h` or `3650d`."
+  }
+}
+
+variable "pki_root_common_name" {
+  type        = string
+  description = "(Optional) Common Name used for the root CA generated in the demo PKI hierarchy."
+  default     = "demo.example.com Root CA"
+
+  validation {
+    condition     = length(trimspace(var.pki_root_common_name)) > 2
+    error_message = "`pki_root_common_name` must not be empty."
+  }
+}
+
+variable "pki_root_default_lease_ttl_seconds" {
+  type        = number
+  description = "(Optional) Default lease TTL for the root PKI mount in seconds."
+  default     = 31536000
+
+  validation {
+    condition     = var.pki_root_default_lease_ttl_seconds > 0
+    error_message = "`pki_root_default_lease_ttl_seconds` must be greater than 0."
+  }
+}
+
+variable "pki_root_max_lease_ttl_seconds" {
+  type        = number
+  description = "(Optional) Maximum lease TTL for the root PKI mount in seconds."
+  default     = 315360000
+
+  validation {
+    condition     = var.pki_root_max_lease_ttl_seconds > 0
+    error_message = "`pki_root_max_lease_ttl_seconds` must be greater than 0."
+  }
+}
+
+variable "pki_root_mount_path" {
+  type        = string
+  description = "(Optional) Path where the root PKI secrets engine is enabled in the child namespace."
+  default     = "pki-root"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9-]*[a-z0-9]$", var.pki_root_mount_path))
+    error_message = "`pki_root_mount_path` must contain only lowercase letters, numbers, and hyphens, and must start and end with an alphanumeric character."
+  }
+}
+
+variable "pki_root_namespace_path" {
+  type        = string
+  description = "(Optional) Child namespace name under the demo namespace where root PKI resources are provisioned."
+  default     = "pki-root"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9-]*[a-z0-9]$", var.pki_root_namespace_path))
+    error_message = "`pki_root_namespace_path` must contain only lowercase letters, numbers, and hyphens, and must start and end with an alphanumeric character."
+  }
+}
+
+variable "pki_vault_addr_for_urls" {
+  type        = string
+  description = "(Optional) Vault address used for PKI issuing certificate and CRL URLs. Leave empty to skip URL configuration."
+  default     = ""
+
+  validation {
+    condition     = var.pki_vault_addr_for_urls == "" || can(regex("^https?://", var.pki_vault_addr_for_urls))
+    error_message = "`pki_vault_addr_for_urls` must be empty or start with `http://` or `https://`."
+  }
+}
