@@ -32,3 +32,13 @@ output "pki_root_namespace_path" {
   description = "Child namespace path under the demo namespace for root PKI resources."
   value       = "${vault_namespace.demo.path}/${vault_namespace.pki_root.path}"
 }
+
+output "tfc_vault_auth_path" {
+  description = "JWT auth mount path for HCP Terraform dynamic credentials in the intermediate namespace."
+  value       = var.tfc_enable_jwt_auth ? vault_jwt_auth_backend.tfc[0].path : null
+}
+
+output "tfc_vault_run_role_name" {
+  description = "Vault run role name to use in HCP Terraform (`TFC_VAULT_RUN_ROLE`)."
+  value       = var.tfc_enable_jwt_auth ? vault_jwt_auth_backend_role.tfc_client[0].role_name : null
+}

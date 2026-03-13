@@ -25,6 +25,7 @@ concurrent demos.
 - Intermediate signing and import (`vault_pki_secret_backend_root_sign_intermediate`, `vault_pki_secret_backend_intermediate_set_signed`)
 - Optional AIA/CRL URL configuration (`vault_pki_secret_backend_config_urls`)
 - PKI role for issuance (`vault_pki_secret_backend_role`)
+- HCP Terraform JWT auth backend and role (`vault_jwt_auth_backend`, `vault_jwt_auth_backend_role`)
 
 ## Permissions
 
@@ -71,6 +72,7 @@ Documentation:
 - Dedicated root and intermediate child namespaces under one demo namespace
 - Root/intermediate CA hierarchy for PKI best practice
 - Policy-limited certificate issuance path (`pki-int/issue/<role>`)
+- HCP Terraform JWT login path scoped to AWS Sandbox project by default
 - Opinionated defaults with variables for domain, role name, and TTLs
 
 ## Demo Value Proposition
