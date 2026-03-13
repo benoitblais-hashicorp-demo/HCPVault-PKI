@@ -153,7 +153,12 @@ This module gives a fast, repeatable demo where operators use existing Vault aut
 <!-- BEGIN_TF_DOCS -->
 # Vault PKI Demo
 
-This Terraform module provisions a Vault PKI environment designed for strong certificate authority separation. It creates a reusable demo namespace with dedicated child namespaces for an offline-style root CA and an online intermediate CA, then configures issuance so end-entity certificates are generated only from the intermediate. The repository is intended to demonstrate a production-aligned PKI pattern in Vault while keeping the deployment repeatable for multiple concurrent demos.
+This Terraform module provisions a Vault PKI environment designed for strong certificate authority
+separation. It creates a reusable demo namespace with dedicated child namespaces for an
+offline-style root CA and an online intermediate CA, then configures issuance so end-entity
+certificates are generated only from the intermediate. The repository is intended to demonstrate a
+production-aligned PKI pattern in Vault while keeping the deployment repeatable for multiple
+concurrent demos.
 
 ## What This Demo Demonstrates
 
