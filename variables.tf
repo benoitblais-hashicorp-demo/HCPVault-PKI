@@ -53,47 +53,47 @@ variable "hcp_jwt_discovery_url" {
   }
 }
 
-variable "hcp_jwt_role_name" {
+variable "hcp_jwt_role_name_aws" {
   type        = string
-  description = "(Optional) Name of the Vault role used by the HCP Terraform workspace during JWT login."
-  default     = "jwt_hcp_role"
+  description = "(Optional) Name of the Vault role used by the HCP Terraform AWS workspace during JWT login."
+  default     = "jwt_hcp_aws_role"
 
   validation {
-    condition     = length(var.hcp_jwt_role_name) > 0
-    error_message = "`hcp_jwt_role_name` must not be empty."
+    condition     = length(var.hcp_jwt_role_name_aws) > 0
+    error_message = "`hcp_jwt_role_name_aws` must not be empty."
   }
 }
 
-variable "hcp_jwt_token_max_ttl" {
+variable "hcp_jwt_token_max_ttl_aws" {
   type        = number
-  description = "(Optional) Maximum lifetime of an HCP Terraform Vault token, in seconds."
+  description = "(Optional) Maximum lifetime of an HCP Terraform AWS Vault token, in seconds."
   default     = 600
 
   validation {
-    condition     = var.hcp_jwt_token_max_ttl > 0
-    error_message = "`hcp_jwt_token_max_ttl` must be greater than 0."
+    condition     = var.hcp_jwt_token_max_ttl_aws > 0
+    error_message = "`hcp_jwt_token_max_ttl_aws` must be greater than 0."
   }
 }
 
-variable "hcp_jwt_token_ttl" {
+variable "hcp_jwt_token_ttl_aws" {
   type        = number
-  description = "(Optional) Default lifetime of an HCP Terraform Vault token, in seconds."
+  description = "(Optional) Default lifetime of an HCP Terraform AWS Vault token, in seconds."
   default     = 300
 
   validation {
-    condition     = var.hcp_jwt_token_ttl > 0
-    error_message = "`hcp_jwt_token_ttl` must be greater than 0."
+    condition     = var.hcp_jwt_token_ttl_aws > 0
+    error_message = "`hcp_jwt_token_ttl_aws` must be greater than 0."
   }
 }
 
-variable "hcp_jwt_workspace_name" {
+variable "hcp_jwt_workspace_name_aws" {
   type        = string
-  description = "(Optional) The HCP Terraform workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform JWT auth entirely."
+  description = "(Optional) The HCP Terraform AWS workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform AWS JWT auth entirely."
   default     = null
 
   validation {
-    condition     = var.hcp_jwt_workspace_name == null || length(var.hcp_jwt_workspace_name) > 0
-    error_message = "`hcp_jwt_workspace_name` must not be an empty string when set."
+    condition     = var.hcp_jwt_workspace_name_aws == null || length(var.hcp_jwt_workspace_name_aws) > 0
+    error_message = "`hcp_jwt_workspace_name_aws` must not be an empty string when set."
   }
 }
 

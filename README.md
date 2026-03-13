@@ -93,7 +93,7 @@ module "hcpvault_pki_demo" {
   pki_intermediate_namespace_path  = "pki-intermediate"
   pki_allowed_domains              = ["demo.example.com"]
   pki_vault_addr_for_urls          = "https://my-cluster.vault.hashicorp.cloud:8200"
-  hcp_jwt_workspace_name           = "aws-sandbox-client"
+  hcp_jwt_workspace_name_aws       = "aws-sandbox-client"
 }
 ```
 
@@ -107,11 +107,11 @@ Set these environment variables in the client workspace:
 - `TFC_VAULT_PROVIDER_AUTH=true`
 - `TFC_VAULT_ADDR=<your vault address>`
 - `TFC_VAULT_NAMESPACE=<output pki_intermediate_namespace_path>`
-- `TFC_VAULT_RUN_ROLE=<output jwt_hcp_role_name>`
+- `TFC_VAULT_RUN_ROLE=<output jwt_hcp_role_name_aws>`
 
 The JWT role is restricted to:
 
-- Workspace: `hcp_jwt_workspace_name`
+- Workspace: `hcp_jwt_workspace_name_aws`
 
 ## Demo Walkthrough (Vault UI)
 
@@ -152,10 +152,10 @@ The JWT role is restricted to:
 | hcp_jwt_backend_path            | Path to mount the JWT auth backend for the HCP Terraform JWT.          | `string`     | `"jwt_hcp"`                    | no       |
 | hcp_jwt_bound_issuer            | Expected issuer (iss claim) of HCP Terraform workload identity JWT tokens. | `string` | `"https://app.terraform.io"` | no |
 | hcp_jwt_discovery_url           | OIDC discovery URL used by Vault to retrieve the HCP Terraform JWKS and validate token signatures. | `string` | `"https://app.terraform.io"` | no |
-| hcp_jwt_role_name               | Name of the Vault role used by the HCP Terraform workspace during JWT login. | `string` | `"jwt_hcp_role"` | no |
-| hcp_jwt_token_max_ttl           | Maximum lifetime of an HCP Terraform Vault token, in seconds.          | `number`     | `600`                           | no       |
-| hcp_jwt_token_ttl               | Default lifetime of an HCP Terraform Vault token, in seconds.          | `number`     | `300`                           | no       |
-| hcp_jwt_workspace_name          | The HCP Terraform workspace name allowed to authenticate to Vault. Set `null` to disable this auth method. | `string` | `null` | no |
+| hcp_jwt_role_name_aws           | Name of the Vault role used by the HCP Terraform AWS workspace during JWT login. | `string` | `"jwt_hcp_aws_role"` | no |
+| hcp_jwt_token_max_ttl_aws       | Maximum lifetime of an HCP Terraform AWS Vault token, in seconds.      | `number`     | `600`                           | no       |
+| hcp_jwt_token_ttl_aws           | Default lifetime of an HCP Terraform AWS Vault token, in seconds.      | `number`     | `300`                           | no       |
+| hcp_jwt_workspace_name_aws      | The HCP Terraform AWS workspace name allowed to authenticate to Vault. Set `null` to disable this auth method. | `string` | `null` | no |
 
 ## Outputs
 
@@ -167,8 +167,8 @@ The JWT role is restricted to:
 | pki_role_name  | Role name used to issue certificates from Vault UI.             |
 | pki_root_mount_path | Path of the root PKI secrets engine in the child namespace. |
 | pki_root_namespace_path | Child namespace path under the demo namespace for root PKI resources. |
-| jwt_hcp_backend_path | Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when `hcp_jwt_workspace_name` is not set. |
-| jwt_hcp_role_name | Name of the Vault role that the HCP Terraform workspace must use for dynamic provider credentials. Null when `hcp_jwt_workspace_name` is not set. |
+| jwt_hcp_backend_path | Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when `hcp_jwt_workspace_name_aws` is not set. |
+| jwt_hcp_role_name_aws | Name of the Vault role that the HCP Terraform AWS workspace must use for dynamic provider credentials. Null when `hcp_jwt_workspace_name_aws` is not set. |
 
 ## Demo Value Proposition
 
@@ -324,33 +324,33 @@ Type: `string`
 
 Default: `"https://app.terraform.io"`
 
-### <a name="input_hcp_jwt_role_name"></a> [hcp\_jwt\_role\_name](#input\_hcp\_jwt\_role\_name)
+### <a name="input_hcp_jwt_role_name_aws"></a> [hcp\_jwt\_role\_name\_aws](#input\_hcp\_jwt\_role\_name\_aws)
 
-Description: (Optional) Name of the Vault role used by the HCP Terraform workspace during JWT login.
+Description: (Optional) Name of the Vault role used by the HCP Terraform AWS workspace during JWT login.
 
 Type: `string`
 
-Default: `"jwt_hcp_role"`
+Default: `"jwt_hcp_aws_role"`
 
-### <a name="input_hcp_jwt_token_max_ttl"></a> [hcp\_jwt\_token\_max\_ttl](#input\_hcp\_jwt\_token\_max\_ttl)
+### <a name="input_hcp_jwt_token_max_ttl_aws"></a> [hcp\_jwt\_token\_max\_ttl\_aws](#input\_hcp\_jwt\_token\_max\_ttl\_aws)
 
-Description: (Optional) Maximum lifetime of an HCP Terraform Vault token, in seconds.
+Description: (Optional) Maximum lifetime of an HCP Terraform AWS Vault token, in seconds.
 
 Type: `number`
 
 Default: `600`
 
-### <a name="input_hcp_jwt_token_ttl"></a> [hcp\_jwt\_token\_ttl](#input\_hcp\_jwt\_token\_ttl)
+### <a name="input_hcp_jwt_token_ttl_aws"></a> [hcp\_jwt\_token\_ttl\_aws](#input\_hcp\_jwt\_token\_ttl\_aws)
 
-Description: (Optional) Default lifetime of an HCP Terraform Vault token, in seconds.
+Description: (Optional) Default lifetime of an HCP Terraform AWS Vault token, in seconds.
 
 Type: `number`
 
 Default: `300`
 
-### <a name="input_hcp_jwt_workspace_name"></a> [hcp\_jwt\_workspace\_name](#input\_hcp\_jwt\_workspace\_name)
+### <a name="input_hcp_jwt_workspace_name_aws"></a> [hcp\_jwt\_workspace\_name\_aws](#input\_hcp\_jwt\_workspace\_name\_aws)
 
-Description: (Optional) The HCP Terraform workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform JWT auth entirely.
+Description: (Optional) The HCP Terraform AWS workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform AWS JWT auth entirely.
 
 Type: `string`
 
@@ -511,7 +511,7 @@ Default: `""`
 The following resources are used by this module:
 
 - [vault_jwt_auth_backend.jwt_hcp](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend) (resource)
-- [vault_jwt_auth_backend_role.jwt_hcp](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend_role) (resource)
+- [vault_jwt_auth_backend_role.jwt_hcp_aws](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend_role) (resource)
 - [vault_mount.pki_intermediate](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
 - [vault_mount.pki_root](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
 - [vault_namespace.demo](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/namespace) (resource)
@@ -536,11 +536,11 @@ Description: Name of the PKI issuance policy created for existing Vault identiti
 
 ### <a name="output_jwt_hcp_backend_path"></a> [jwt\_hcp\_backend\_path](#output\_jwt\_hcp\_backend\_path)
 
-Description: Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when hcp\_jwt\_workspace\_name is not set.
+Description: Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when hcp\_jwt\_workspace\_name\_aws is not set.
 
-### <a name="output_jwt_hcp_role_name"></a> [jwt\_hcp\_role\_name](#output\_jwt\_hcp\_role\_name)
+### <a name="output_jwt_hcp_role_name_aws"></a> [jwt\_hcp\_role\_name\_aws](#output\_jwt\_hcp\_role\_name\_aws)
 
-Description: Name of the Vault role that the HCP Terraform workspace must use for dynamic provider credentials. Null when hcp\_jwt\_workspace\_name is not set.
+Description: Name of the Vault role that the HCP Terraform AWS workspace must use for dynamic provider credentials. Null when hcp\_jwt\_workspace\_name\_aws is not set.
 
 ### <a name="output_namespace_path"></a> [namespace\_path](#output\_namespace\_path)
 
