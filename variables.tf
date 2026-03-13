@@ -208,3 +208,64 @@ variable "pki_vault_addr_for_urls" {
     error_message = "`pki_vault_addr_for_urls` must be empty or start with `http://` or `https://`."
   }
 }
+
+variable "tfc_enable_jwt_auth" {
+  type        = bool
+  description = "(Optional) Enable JWT authentication for HCP Terraform workspaces in the intermediate namespace."
+  default     = true
+}
+
+variable "tfc_organization_name" {
+  type        = string
+  description = "(Optional) HCP Terraform organization name allowed to authenticate to Vault."
+  default     = "your-tfc-organization"
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9_-]*$", var.tfc_organization_name))
+    error_message = "`tfc_organization_name` must start with an alphanumeric character and contain only alphanumeric characters, underscores, or hyphens."
+  }
+}
+
+variable "tfc_project_name" {
+  type        = string
+  description = "(Optional) HCP Terraform project name allowed to authenticate to Vault."
+  default     = "AWS Sandbox Account"
+
+  validation {
+    condition     = length(trimspace(var.tfc_project_name)) > 0
+    error_message = "`tfc_project_name` must not be empty."
+  }
+}
+
+variable "tfc_vault_auth_path" {
+  type        = string
+  description = "(Optional) Path where JWT auth for HCP Terraform is enabled in the intermediate namespace."
+  default     = "jwt"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9-]*[a-z0-9]$", var.tfc_vault_auth_path))
+    error_message = "`tfc_vault_auth_path` must contain only lowercase letters, numbers, and hyphens, and must start and end with an alphanumeric character."
+  }
+}
+
+variable "tfc_vault_run_role_name" {
+  type        = string
+  description = "(Optional) Vault JWT auth role name used by HCP Terraform dynamic credentials."
+  default     = "tfc-aws-sandbox-client"
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9_-]*$", var.tfc_vault_run_role_name))
+    error_message = "`tfc_vault_run_role_name` must start with an alphanumeric character and contain only alphanumeric characters, underscores, or hyphens."
+  }
+}
+
+variable "tfc_workspace_name" {
+  type        = string
+  description = "(Optional) HCP Terraform workspace name allowed to authenticate to Vault. Use `*` to allow all workspaces in the project."
+  default     = "*"
+
+  validation {
+    condition     = length(trimspace(var.tfc_workspace_name)) > 0
+    error_message = "`tfc_workspace_name` must not be empty."
+  }
+}

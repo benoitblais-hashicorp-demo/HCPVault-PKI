@@ -181,3 +181,41 @@ EOT
 
   depends_on = [vault_pki_secret_backend_role.issue_role]
 }
+
+# ------------------------------------------------------------------------------
+# HCP Terraform Client Authentication (Child Namespace)
+# ------------------------------------------------------------------------------
+
+resource "vault_jwt_auth_backend" "tfc" {
+  count = var.tfc_enable_jwt_auth ? 1 : 0
+
+  namespace = local.pki_intermediate_namespace_full_path
+
+  path               = var.tfc_vault_auth_path
+  type               = "jwt"
+  oidc_discovery_url = "https://app.terraform.io"
+  bound_issuer       = "https://app.terraform.io"
+
+  depends_on = [vault_namespace.pki_intermediate]
+}
+
+resource "vault_jwt_auth_backend_role" "tfc_client" {
+  count = var.tfc_enable_jwt_auth ? 1 : 0
+
+  namespace = local.pki_intermediate_namespace_full_path
+
+  backend           = vault_jwt_auth_backend.tfc[0].path
+  role_name         = var.tfc_vault_run_role_name
+  role_type         = "jwt"
+  user_claim        = "terraform_full_workspace"
+  bound_audiences   = ["vault.workload.identity"]
+  bound_claims_type = "glob"
+
+  bound_claims = {
+    sub = "organization:${var.tfc_organization_name}:project:${var.tfc_project_name}:workspace:${var.tfc_workspace_name}:run_phase:*"
+  }
+
+  token_policies = [vault_policy.pki_demo.name]
+
+  depends_on = [vault_policy.pki_demo]
+}
