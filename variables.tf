@@ -9,6 +9,94 @@ variable "demo_policy_name" {
   }
 }
 
+variable "hcp_jwt_backend_description" {
+  type        = string
+  description = "(Optional) The description of the HCP Terraform JWT auth backend."
+  default     = "JWT auth method for HCP Terraform workload identity tokens."
+
+  validation {
+    condition     = length(var.hcp_jwt_backend_description) > 0
+    error_message = "`hcp_jwt_backend_description` must not be empty."
+  }
+}
+
+variable "hcp_jwt_backend_path" {
+  type        = string
+  description = "(Optional) Path to mount the JWT auth backend for the HCP Terraform JWT."
+  default     = "jwt_hcp"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9_-]*$", var.hcp_jwt_backend_path))
+    error_message = "`hcp_jwt_backend_path` must contain only lowercase letters, numbers, hyphens, and underscores, and must start with an alphanumeric character."
+  }
+}
+
+variable "hcp_jwt_bound_issuer" {
+  type        = string
+  description = "(Optional) Expected issuer (iss claim) of HCP Terraform workload identity JWT tokens."
+  default     = "https://app.terraform.io"
+
+  validation {
+    condition     = can(regex("^https://", var.hcp_jwt_bound_issuer))
+    error_message = "`hcp_jwt_bound_issuer` must be a valid HTTPS URL."
+  }
+}
+
+variable "hcp_jwt_discovery_url" {
+  type        = string
+  description = "(Optional) OIDC discovery URL used by Vault to retrieve the HCP Terraform JWKS and validate token signatures."
+  default     = "https://app.terraform.io"
+
+  validation {
+    condition     = can(regex("^https://", var.hcp_jwt_discovery_url))
+    error_message = "`hcp_jwt_discovery_url` must be a valid HTTPS URL."
+  }
+}
+
+variable "hcp_jwt_role_name" {
+  type        = string
+  description = "(Optional) Name of the Vault role used by the HCP Terraform workspace during JWT login."
+  default     = "jwt_hcp_role"
+
+  validation {
+    condition     = length(var.hcp_jwt_role_name) > 0
+    error_message = "`hcp_jwt_role_name` must not be empty."
+  }
+}
+
+variable "hcp_jwt_token_max_ttl" {
+  type        = number
+  description = "(Optional) Maximum lifetime of an HCP Terraform Vault token, in seconds."
+  default     = 600
+
+  validation {
+    condition     = var.hcp_jwt_token_max_ttl > 0
+    error_message = "`hcp_jwt_token_max_ttl` must be greater than 0."
+  }
+}
+
+variable "hcp_jwt_token_ttl" {
+  type        = number
+  description = "(Optional) Default lifetime of an HCP Terraform Vault token, in seconds."
+  default     = 300
+
+  validation {
+    condition     = var.hcp_jwt_token_ttl > 0
+    error_message = "`hcp_jwt_token_ttl` must be greater than 0."
+  }
+}
+
+variable "hcp_jwt_workspace_name" {
+  type        = string
+  description = "(Optional) The HCP Terraform workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform JWT auth entirely."
+  default     = null
+
+  validation {
+    condition     = var.hcp_jwt_workspace_name == null || length(var.hcp_jwt_workspace_name) > 0
+    error_message = "`hcp_jwt_workspace_name` must not be an empty string when set."
+  }
+}
+
 variable "namespace_path" {
   type        = string
   description = "(Optional) The path of the namespace. Must not have a trailing `/`."
@@ -206,66 +294,5 @@ variable "pki_vault_addr_for_urls" {
   validation {
     condition     = var.pki_vault_addr_for_urls == "" || can(regex("^https?://", var.pki_vault_addr_for_urls))
     error_message = "`pki_vault_addr_for_urls` must be empty or start with `http://` or `https://`."
-  }
-}
-
-variable "tfc_enable_jwt_auth" {
-  type        = bool
-  description = "(Optional) Enable JWT authentication for HCP Terraform workspaces in the intermediate namespace."
-  default     = true
-}
-
-variable "tfc_organization_name" {
-  type        = string
-  description = "(Optional) HCP Terraform organization name allowed to authenticate to Vault."
-  default     = "your-tfc-organization"
-
-  validation {
-    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9_-]*$", var.tfc_organization_name))
-    error_message = "`tfc_organization_name` must start with an alphanumeric character and contain only alphanumeric characters, underscores, or hyphens."
-  }
-}
-
-variable "tfc_project_name" {
-  type        = string
-  description = "(Optional) HCP Terraform project name allowed to authenticate to Vault."
-  default     = "AWS Sandbox Account"
-
-  validation {
-    condition     = length(trimspace(var.tfc_project_name)) > 0
-    error_message = "`tfc_project_name` must not be empty."
-  }
-}
-
-variable "tfc_vault_auth_path" {
-  type        = string
-  description = "(Optional) Path where JWT auth for HCP Terraform is enabled in the intermediate namespace."
-  default     = "jwt"
-
-  validation {
-    condition     = can(regex("^[a-z0-9][a-z0-9-]*[a-z0-9]$", var.tfc_vault_auth_path))
-    error_message = "`tfc_vault_auth_path` must contain only lowercase letters, numbers, and hyphens, and must start and end with an alphanumeric character."
-  }
-}
-
-variable "tfc_vault_run_role_name" {
-  type        = string
-  description = "(Optional) Vault JWT auth role name used by HCP Terraform dynamic credentials."
-  default     = "tfc-aws-sandbox-client"
-
-  validation {
-    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9_-]*$", var.tfc_vault_run_role_name))
-    error_message = "`tfc_vault_run_role_name` must start with an alphanumeric character and contain only alphanumeric characters, underscores, or hyphens."
-  }
-}
-
-variable "tfc_workspace_name" {
-  type        = string
-  description = "(Optional) HCP Terraform workspace name allowed to authenticate to Vault. Use `*` to allow all workspaces in the project."
-  default     = "*"
-
-  validation {
-    condition     = length(trimspace(var.tfc_workspace_name)) > 0
-    error_message = "`tfc_workspace_name` must not be empty."
   }
 }
