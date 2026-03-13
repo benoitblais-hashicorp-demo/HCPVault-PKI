@@ -208,6 +208,7 @@ concurrent demos.
 - Intermediate signing and import (`vault_pki_secret_backend_root_sign_intermediate`, `vault_pki_secret_backend_intermediate_set_signed`)
 - Optional AIA/CRL URL configuration (`vault_pki_secret_backend_config_urls`)
 - PKI role for issuance (`vault_pki_secret_backend_role`)
+- HCP Terraform JWT auth backend and role (`vault_jwt_auth_backend`, `vault_jwt_auth_backend_role`)
 
 ## Permissions
 
@@ -254,6 +255,7 @@ Documentation:
 - Dedicated root and intermediate child namespaces under one demo namespace
 - Root/intermediate CA hierarchy for PKI best practice
 - Policy-limited certificate issuance path (`pki-int/issue/<role>`)
+- HCP Terraform JWT login path scoped to a single workspace
 - Opinionated defaults with variables for domain, role name, and TTLs
 
 ## Demo Value Proposition
@@ -289,6 +291,70 @@ Description: (Optional) Name of the Vault policy for UI certificate issuance dem
 Type: `string`
 
 Default: `"pki-demo-ui-issuer"`
+
+### <a name="input_hcp_jwt_backend_description"></a> [hcp\_jwt\_backend\_description](#input\_hcp\_jwt\_backend\_description)
+
+Description: (Optional) The description of the HCP Terraform JWT auth backend.
+
+Type: `string`
+
+Default: `"JWT auth method for HCP Terraform workload identity tokens."`
+
+### <a name="input_hcp_jwt_backend_path"></a> [hcp\_jwt\_backend\_path](#input\_hcp\_jwt\_backend\_path)
+
+Description: (Optional) Path to mount the JWT auth backend for the HCP Terraform JWT.
+
+Type: `string`
+
+Default: `"jwt_hcp"`
+
+### <a name="input_hcp_jwt_bound_issuer"></a> [hcp\_jwt\_bound\_issuer](#input\_hcp\_jwt\_bound\_issuer)
+
+Description: (Optional) Expected issuer (iss claim) of HCP Terraform workload identity JWT tokens.
+
+Type: `string`
+
+Default: `"https://app.terraform.io"`
+
+### <a name="input_hcp_jwt_discovery_url"></a> [hcp\_jwt\_discovery\_url](#input\_hcp\_jwt\_discovery\_url)
+
+Description: (Optional) OIDC discovery URL used by Vault to retrieve the HCP Terraform JWKS and validate token signatures.
+
+Type: `string`
+
+Default: `"https://app.terraform.io"`
+
+### <a name="input_hcp_jwt_role_name"></a> [hcp\_jwt\_role\_name](#input\_hcp\_jwt\_role\_name)
+
+Description: (Optional) Name of the Vault role used by the HCP Terraform workspace during JWT login.
+
+Type: `string`
+
+Default: `"jwt_hcp_role"`
+
+### <a name="input_hcp_jwt_token_max_ttl"></a> [hcp\_jwt\_token\_max\_ttl](#input\_hcp\_jwt\_token\_max\_ttl)
+
+Description: (Optional) Maximum lifetime of an HCP Terraform Vault token, in seconds.
+
+Type: `number`
+
+Default: `600`
+
+### <a name="input_hcp_jwt_token_ttl"></a> [hcp\_jwt\_token\_ttl](#input\_hcp\_jwt\_token\_ttl)
+
+Description: (Optional) Default lifetime of an HCP Terraform Vault token, in seconds.
+
+Type: `number`
+
+Default: `300`
+
+### <a name="input_hcp_jwt_workspace_name"></a> [hcp\_jwt\_workspace\_name](#input\_hcp\_jwt\_workspace\_name)
+
+Description: (Optional) The HCP Terraform workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform JWT auth entirely.
+
+Type: `string`
+
+Default: `null`
 
 ### <a name="input_namespace_path"></a> [namespace\_path](#input\_namespace\_path)
 
@@ -444,6 +510,8 @@ Default: `""`
 
 The following resources are used by this module:
 
+- [vault_jwt_auth_backend.jwt_hcp](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend) (resource)
+- [vault_jwt_auth_backend_role.jwt_hcp](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend_role) (resource)
 - [vault_mount.pki_intermediate](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
 - [vault_mount.pki_root](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
 - [vault_namespace.demo](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/namespace) (resource)
@@ -465,6 +533,14 @@ The following outputs are exported:
 ### <a name="output_demo_policy_name"></a> [demo\_policy\_name](#output\_demo\_policy\_name)
 
 Description: Name of the PKI issuance policy created for existing Vault identities.
+
+### <a name="output_jwt_hcp_backend_path"></a> [jwt\_hcp\_backend\_path](#output\_jwt\_hcp\_backend\_path)
+
+Description: Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when hcp\_jwt\_workspace\_name is not set.
+
+### <a name="output_jwt_hcp_role_name"></a> [jwt\_hcp\_role\_name](#output\_jwt\_hcp\_role\_name)
+
+Description: Name of the Vault role that the HCP Terraform workspace must use for dynamic provider credentials. Null when hcp\_jwt\_workspace\_name is not set.
 
 ### <a name="output_namespace_path"></a> [namespace\_path](#output\_namespace\_path)
 
