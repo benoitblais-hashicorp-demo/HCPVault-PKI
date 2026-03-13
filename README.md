@@ -506,54 +506,6 @@ Type: `string`
 
 Default: `""`
 
-### <a name="input_tfc_enable_jwt_auth"></a> [tfc\_enable\_jwt\_auth](#input\_tfc\_enable\_jwt\_auth)
-
-Description: (Optional) Enable JWT authentication for HCP Terraform workspaces in the intermediate namespace.
-
-Type: `bool`
-
-Default: `true`
-
-### <a name="input_tfc_organization_name"></a> [tfc\_organization\_name](#input\_tfc\_organization\_name)
-
-Description: (Optional) HCP Terraform organization name allowed to authenticate to Vault.
-
-Type: `string`
-
-Default: `"your-tfc-organization"`
-
-### <a name="input_tfc_project_name"></a> [tfc\_project\_name](#input\_tfc\_project\_name)
-
-Description: (Optional) HCP Terraform project name allowed to authenticate to Vault.
-
-Type: `string`
-
-Default: `"AWS Sandbox Account"`
-
-### <a name="input_tfc_vault_auth_path"></a> [tfc\_vault\_auth\_path](#input\_tfc\_vault\_auth\_path)
-
-Description: (Optional) Path where JWT auth for HCP Terraform is enabled in the intermediate namespace.
-
-Type: `string`
-
-Default: `"jwt"`
-
-### <a name="input_tfc_vault_run_role_name"></a> [tfc\_vault\_run\_role\_name](#input\_tfc\_vault\_run\_role\_name)
-
-Description: (Optional) Vault JWT auth role name used by HCP Terraform dynamic credentials.
-
-Type: `string`
-
-Default: `"tfc-aws-sandbox-client"`
-
-### <a name="input_tfc_workspace_name"></a> [tfc\_workspace\_name](#input\_tfc\_workspace\_name)
-
-Description: (Optional) HCP Terraform workspace name allowed to authenticate to Vault. Use `*` to allow all workspaces in the project.
-
-Type: `string`
-
-Default: `"*"`
-
 ## Resources
 
 The following resources are used by this module:
@@ -613,14 +565,6 @@ Description: Path of the root PKI secrets engine in the child namespace.
 ### <a name="output_pki_root_namespace_path"></a> [pki\_root\_namespace\_path](#output\_pki\_root\_namespace\_path)
 
 Description: Child namespace path under the demo namespace for root PKI resources.
-
-### <a name="output_tfc_vault_auth_path"></a> [tfc\_vault\_auth\_path](#output\_tfc\_vault\_auth\_path)
-
-Description: JWT auth mount path for HCP Terraform dynamic credentials in the intermediate namespace.
-
-### <a name="output_tfc_vault_run_role_name"></a> [tfc\_vault\_run\_role\_name](#output\_tfc\_vault\_run\_role\_name)
-
-Description: Vault run role name to use in HCP Terraform (`TFC_VAULT_RUN_ROLE`).
 
 <!-- markdownlint-enable -->
 # External Documentation
