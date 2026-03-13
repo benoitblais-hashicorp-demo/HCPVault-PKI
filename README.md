@@ -210,6 +210,7 @@ concurrent demos.
 - Intermediate signing and import (`vault_pki_secret_backend_root_sign_intermediate`, `vault_pki_secret_backend_intermediate_set_signed`)
 - Optional AIA/CRL URL configuration (`vault_pki_secret_backend_config_urls`)
 - PKI role for issuance (`vault_pki_secret_backend_role`)
+- HCP Terraform JWT auth backend and role (`vault_jwt_auth_backend`, `vault_jwt_auth_backend_role`)
 
 ## Permissions
 
@@ -256,6 +257,7 @@ Documentation:
 - Dedicated root and intermediate child namespaces under one demo namespace
 - Root/intermediate CA hierarchy for PKI best practice
 - Policy-limited certificate issuance path (`pki-int/issue/<role>`)
+- HCP Terraform JWT login path scoped to AWS Sandbox project by default
 - Opinionated defaults with variables for domain, role name, and TTLs
 
 ## Demo Value Proposition
@@ -442,10 +444,60 @@ Type: `string`
 
 Default: `""`
 
+### <a name="input_tfc_enable_jwt_auth"></a> [tfc\_enable\_jwt\_auth](#input\_tfc\_enable\_jwt\_auth)
+
+Description: (Optional) Enable JWT authentication for HCP Terraform workspaces in the intermediate namespace.
+
+Type: `bool`
+
+Default: `true`
+
+### <a name="input_tfc_organization_name"></a> [tfc\_organization\_name](#input\_tfc\_organization\_name)
+
+Description: (Optional) HCP Terraform organization name allowed to authenticate to Vault.
+
+Type: `string`
+
+Default: `"your-tfc-organization"`
+
+### <a name="input_tfc_project_name"></a> [tfc\_project\_name](#input\_tfc\_project\_name)
+
+Description: (Optional) HCP Terraform project name allowed to authenticate to Vault.
+
+Type: `string`
+
+Default: `"AWS Sandbox Account"`
+
+### <a name="input_tfc_vault_auth_path"></a> [tfc\_vault\_auth\_path](#input\_tfc\_vault\_auth\_path)
+
+Description: (Optional) Path where JWT auth for HCP Terraform is enabled in the intermediate namespace.
+
+Type: `string`
+
+Default: `"jwt"`
+
+### <a name="input_tfc_vault_run_role_name"></a> [tfc\_vault\_run\_role\_name](#input\_tfc\_vault\_run\_role\_name)
+
+Description: (Optional) Vault JWT auth role name used by HCP Terraform dynamic credentials.
+
+Type: `string`
+
+Default: `"tfc-aws-sandbox-client"`
+
+### <a name="input_tfc_workspace_name"></a> [tfc\_workspace\_name](#input\_tfc\_workspace\_name)
+
+Description: (Optional) HCP Terraform workspace name allowed to authenticate to Vault. Use `*` to allow all workspaces in the project.
+
+Type: `string`
+
+Default: `"*"`
+
 ## Resources
 
 The following resources are used by this module:
 
+- [vault_jwt_auth_backend.tfc](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend) (resource)
+- [vault_jwt_auth_backend_role.tfc_client](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend_role) (resource)
 - [vault_mount.pki_intermediate](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
 - [vault_mount.pki_root](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
 - [vault_namespace.demo](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/namespace) (resource)
@@ -491,6 +543,14 @@ Description: Path of the root PKI secrets engine in the child namespace.
 ### <a name="output_pki_root_namespace_path"></a> [pki\_root\_namespace\_path](#output\_pki\_root\_namespace\_path)
 
 Description: Child namespace path under the demo namespace for root PKI resources.
+
+### <a name="output_tfc_vault_auth_path"></a> [tfc\_vault\_auth\_path](#output\_tfc\_vault\_auth\_path)
+
+Description: JWT auth mount path for HCP Terraform dynamic credentials in the intermediate namespace.
+
+### <a name="output_tfc_vault_run_role_name"></a> [tfc\_vault\_run\_role\_name](#output\_tfc\_vault\_run\_role\_name)
+
+Description: Vault run role name to use in HCP Terraform (`TFC_VAULT_RUN_ROLE`).
 
 <!-- markdownlint-enable -->
 # External Documentation
