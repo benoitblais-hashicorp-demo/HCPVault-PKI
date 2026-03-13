@@ -72,7 +72,7 @@ Documentation:
 - Dedicated root and intermediate child namespaces under one demo namespace
 - Root/intermediate CA hierarchy for PKI best practice
 - Policy-limited certificate issuance path (`pki-int/issue/<role>`)
-- HCP Terraform JWT login path scoped to AWS Sandbox project by default
+- HCP Terraform JWT login path scoped to a single workspace
 - Opinionated defaults with variables for domain, role name, and TTLs
 
 ## Demo Value Proposition

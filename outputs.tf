@@ -33,12 +33,12 @@ output "pki_root_namespace_path" {
   value       = "${vault_namespace.demo.path}/${vault_namespace.pki_root.path}"
 }
 
-output "tfc_vault_auth_path" {
-  description = "JWT auth mount path for HCP Terraform dynamic credentials in the intermediate namespace."
-  value       = var.tfc_enable_jwt_auth ? vault_jwt_auth_backend.tfc[0].path : null
+output "jwt_hcp_backend_path" {
+  description = "Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when hcp_jwt_workspace_name is not set."
+  value       = try(vault_jwt_auth_backend.jwt_hcp[0].path, null)
 }
 
-output "tfc_vault_run_role_name" {
-  description = "Vault run role name to use in HCP Terraform (`TFC_VAULT_RUN_ROLE`)."
-  value       = var.tfc_enable_jwt_auth ? vault_jwt_auth_backend_role.tfc_client[0].role_name : null
+output "jwt_hcp_role_name" {
+  description = "Name of the Vault role that the HCP Terraform workspace must use for dynamic provider credentials. Null when hcp_jwt_workspace_name is not set."
+  value       = try(vault_jwt_auth_backend_role.jwt_hcp[0].role_name, null)
 }

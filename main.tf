@@ -186,36 +186,39 @@ EOT
 # HCP Terraform Client Authentication (Child Namespace)
 # ------------------------------------------------------------------------------
 
-resource "vault_jwt_auth_backend" "tfc" {
-  count = var.tfc_enable_jwt_auth ? 1 : 0
+resource "vault_jwt_auth_backend" "jwt_hcp" {
+  count = var.hcp_jwt_workspace_name != null ? 1 : 0
 
   namespace = local.pki_intermediate_namespace_full_path
 
-  path               = var.tfc_vault_auth_path
+  description        = var.hcp_jwt_backend_description
+  path               = var.hcp_jwt_backend_path
   type               = "jwt"
-  oidc_discovery_url = "https://app.terraform.io"
-  bound_issuer       = "https://app.terraform.io"
+  oidc_discovery_url = var.hcp_jwt_discovery_url
+  bound_issuer       = var.hcp_jwt_bound_issuer
 
   depends_on = [vault_namespace.pki_intermediate]
 }
 
-resource "vault_jwt_auth_backend_role" "tfc_client" {
-  count = var.tfc_enable_jwt_auth ? 1 : 0
+resource "vault_jwt_auth_backend_role" "jwt_hcp" {
+  count = length(vault_jwt_auth_backend.jwt_hcp) > 0 ? 1 : 0
 
   namespace = local.pki_intermediate_namespace_full_path
 
-  backend           = vault_jwt_auth_backend.tfc[0].path
-  role_name         = var.tfc_vault_run_role_name
-  role_type         = "jwt"
-  user_claim        = "terraform_full_workspace"
-  bound_audiences   = ["vault.workload.identity"]
-  bound_claims_type = "glob"
+  backend         = vault_jwt_auth_backend.jwt_hcp[0].path
+  role_name       = var.hcp_jwt_role_name
+  role_type       = "jwt"
+  user_claim      = "terraform_workspace_name"
+  bound_audiences = ["vault.workload.identity"]
 
   bound_claims = {
-    sub = "organization:${var.tfc_organization_name}:project:${var.tfc_project_name}:workspace:${var.tfc_workspace_name}:run_phase:*"
+    terraform_workspace_name = var.hcp_jwt_workspace_name
   }
 
-  token_policies = [vault_policy.pki_demo.name]
+  token_policies          = [vault_policy.pki_demo.name]
+  token_ttl               = var.hcp_jwt_token_ttl
+  token_max_ttl           = var.hcp_jwt_token_max_ttl
+  token_no_default_policy = true
 
   depends_on = [vault_policy.pki_demo]
 }
