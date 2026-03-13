@@ -34,11 +34,11 @@ output "pki_root_namespace_path" {
 }
 
 output "jwt_hcp_backend_path" {
-  description = "Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when hcp_jwt_workspace_name is not set."
+  description = "Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when hcp_jwt_workspace_name_aws is not set."
   value       = try(vault_jwt_auth_backend.jwt_hcp[0].path, null)
 }
 
-output "jwt_hcp_role_name" {
-  description = "Name of the Vault role that the HCP Terraform workspace must use for dynamic provider credentials. Null when hcp_jwt_workspace_name is not set."
-  value       = try(vault_jwt_auth_backend_role.jwt_hcp[0].role_name, null)
+output "jwt_hcp_role_name_aws" {
+  description = "Name of the Vault role that the HCP Terraform AWS workspace must use for dynamic provider credentials. Null when hcp_jwt_workspace_name_aws is not set."
+  value       = try(vault_jwt_auth_backend_role.jwt_hcp_aws[0].role_name, null)
 }

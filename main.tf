@@ -187,7 +187,7 @@ EOT
 # ------------------------------------------------------------------------------
 
 resource "vault_jwt_auth_backend" "jwt_hcp" {
-  count = var.hcp_jwt_workspace_name != null ? 1 : 0
+  count = var.hcp_jwt_workspace_name_aws != null ? 1 : 0
 
   namespace = local.pki_intermediate_namespace_full_path
 
@@ -200,24 +200,24 @@ resource "vault_jwt_auth_backend" "jwt_hcp" {
   depends_on = [vault_namespace.pki_intermediate]
 }
 
-resource "vault_jwt_auth_backend_role" "jwt_hcp" {
+resource "vault_jwt_auth_backend_role" "jwt_hcp_aws" {
   count = length(vault_jwt_auth_backend.jwt_hcp) > 0 ? 1 : 0
 
   namespace = local.pki_intermediate_namespace_full_path
 
   backend         = vault_jwt_auth_backend.jwt_hcp[0].path
-  role_name       = var.hcp_jwt_role_name
+  role_name       = var.hcp_jwt_role_name_aws
   role_type       = "jwt"
   user_claim      = "terraform_workspace_name"
   bound_audiences = ["vault.workload.identity"]
 
   bound_claims = {
-    terraform_workspace_name = var.hcp_jwt_workspace_name
+    terraform_workspace_name = var.hcp_jwt_workspace_name_aws
   }
 
   token_policies          = [vault_policy.pki_demo.name]
-  token_ttl               = var.hcp_jwt_token_ttl
-  token_max_ttl           = var.hcp_jwt_token_max_ttl
+  token_ttl               = var.hcp_jwt_token_ttl_aws
+  token_max_ttl           = var.hcp_jwt_token_max_ttl_aws
   token_no_default_policy = true
 
   depends_on = [vault_policy.pki_demo]
