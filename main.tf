@@ -196,6 +196,20 @@ resource "vault_auth_backend" "aws" {
   depends_on = [vault_namespace.pki_intermediate]
 }
 
+resource "vault_jwt_auth_backend" "jwt_azure_devops" {
+  count = var.hcp_jwt_workspace_name_azure != null ? 1 : 0
+
+  namespace = local.pki_intermediate_namespace_full_path
+
+  description        = var.azure_devops_jwt_backend_description
+  path               = var.azure_devops_jwt_backend_path
+  type               = "jwt"
+  oidc_discovery_url = var.azure_devops_jwt_discovery_url
+  bound_issuer       = var.azure_devops_jwt_bound_issuer
+
+  depends_on = [vault_namespace.pki_intermediate]
+}
+
 resource "vault_policy" "hcp_jwt_aws_admin" {
   count = var.hcp_jwt_workspace_name_aws != null ? 1 : 0
 
@@ -252,6 +266,46 @@ EOT
   depends_on = [vault_auth_backend.aws]
 }
 
+resource "vault_policy" "hcp_jwt_azure_admin" {
+  count = var.hcp_jwt_workspace_name_azure != null ? 1 : 0
+
+  namespace = local.pki_intermediate_namespace_full_path
+
+  name = var.hcp_jwt_azure_admin_policy_name
+
+  policy = <<EOT
+path "sys/policies/acl" {
+  capabilities = ["list"]
+}
+
+path "sys/policies/acl/*" {
+  capabilities = ["create", "update", "read", "delete", "list"]
+}
+
+path "${var.pki_intermediate_mount_path}/roles" {
+  capabilities = ["list"]
+}
+
+path "${var.pki_intermediate_mount_path}/roles/*" {
+  capabilities = ["create", "update", "read", "delete", "list"]
+}
+
+path "${var.pki_intermediate_mount_path}/issue/*" {
+  capabilities = ["create", "update"]
+}
+
+path "${var.pki_intermediate_mount_path}/cert/*" {
+  capabilities = ["read", "list"]
+}
+
+path "sys/mounts/${var.pki_intermediate_mount_path}" {
+  capabilities = ["read"]
+}
+EOT
+
+  depends_on = [vault_jwt_auth_backend.jwt_azure_devops]
+}
+
 resource "vault_jwt_auth_backend" "jwt_hcp" {
   count = var.hcp_jwt_workspace_name_aws != null ? 1 : 0
 
@@ -290,4 +344,30 @@ resource "vault_jwt_auth_backend_role" "jwt_hcp_aws" {
   token_no_default_policy = false
 
   depends_on = [vault_policy.pki_demo, vault_policy.hcp_jwt_aws_admin]
+}
+
+resource "vault_jwt_auth_backend_role" "jwt_hcp_azure" {
+  count = var.hcp_jwt_workspace_name_azure != null && length(vault_jwt_auth_backend.jwt_azure_devops) > 0 ? 1 : 0
+
+  namespace = local.pki_intermediate_namespace_full_path
+
+  backend         = vault_jwt_auth_backend.jwt_azure_devops[0].path
+  role_name       = var.hcp_jwt_role_name_azure
+  role_type       = "jwt"
+  user_claim      = "terraform_workspace_name"
+  bound_audiences = ["vault.workload.identity"]
+
+  bound_claims = {
+    terraform_workspace_name = var.hcp_jwt_workspace_name_azure
+  }
+
+  token_policies = concat(
+    [vault_policy.pki_demo.name],
+    length(vault_policy.hcp_jwt_azure_admin) > 0 ? [vault_policy.hcp_jwt_azure_admin[0].name] : []
+  )
+  token_ttl               = var.hcp_jwt_token_ttl_azure
+  token_max_ttl           = var.hcp_jwt_token_max_ttl_azure
+  token_no_default_policy = false
+
+  depends_on = [vault_policy.pki_demo, vault_policy.hcp_jwt_azure_admin]
 }
