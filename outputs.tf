@@ -1,3 +1,8 @@
+output "aws_auth_backend_path" {
+  description = "Path of the AWS auth backend in the intermediate namespace."
+  value       = vault_auth_backend.aws.path
+}
+
 output "demo_policy_name" {
   description = "Name of the PKI issuance policy created for existing Vault identities."
   value       = vault_policy.pki_demo.name
@@ -41,4 +46,9 @@ output "jwt_hcp_backend_path" {
 output "jwt_hcp_role_name_aws" {
   description = "Name of the Vault role that the HCP Terraform AWS workspace must use for dynamic provider credentials. Null when hcp_jwt_workspace_name_aws is not set."
   value       = try(vault_jwt_auth_backend_role.jwt_hcp_aws[0].role_name, null)
+}
+
+output "jwt_hcp_aws_admin_policy_name" {
+  description = "Name of the Vault policy granting HCP Terraform AWS JWT role access to manage AWS auth roles and ACL policies. Null when hcp_jwt_workspace_name_aws is not set."
+  value       = try(vault_policy.hcp_jwt_aws_admin[0].name, null)
 }

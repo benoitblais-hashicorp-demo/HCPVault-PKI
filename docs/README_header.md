@@ -25,7 +25,9 @@ concurrent demos.
 - Intermediate signing and import (`vault_pki_secret_backend_root_sign_intermediate`, `vault_pki_secret_backend_intermediate_set_signed`)
 - Optional AIA/CRL URL configuration (`vault_pki_secret_backend_config_urls`)
 - PKI role for issuance (`vault_pki_secret_backend_role`)
+- AWS auth backend for Lambda authentication workflows (`vault_auth_backend`)
 - HCP Terraform JWT auth backend and role (`vault_jwt_auth_backend`, `vault_jwt_auth_backend_role`)
+- JWT AWS admin policy for AWS auth role and ACL policy management (`vault_policy`)
 
 ## Permissions
 
@@ -73,6 +75,8 @@ Documentation:
 - Root/intermediate CA hierarchy for PKI best practice
 - Policy-limited certificate issuance path (`pki-int/issue/<role>`)
 - HCP Terraform JWT login path scoped to a single workspace
+- AWS auth backend provisioning for Lambda-oriented authentication flows
+- JWT AWS role policy allowing AWS auth role and ACL policy creation/management
 - Opinionated defaults with variables for domain, role name, and TTLs
 
 ## Demo Value Proposition
