@@ -304,6 +304,38 @@ Type: `string`
 
 Default: `"aws"`
 
+### <a name="input_azure_devops_jwt_backend_description"></a> [azure\_devops\_jwt\_backend\_description](#input\_azure\_devops\_jwt\_backend\_description)
+
+Description: (Optional) Description for the Azure DevOps JWT/OIDC auth backend.
+
+Type: `string`
+
+Default: `"JWT/OIDC auth backend for Azure DevOps pipelines."`
+
+### <a name="input_azure_devops_jwt_backend_path"></a> [azure\_devops\_jwt\_backend\_path](#input\_azure\_devops\_jwt\_backend\_path)
+
+Description: (Optional) Path to mount the Azure DevOps JWT/OIDC auth backend in the intermediate child namespace.
+
+Type: `string`
+
+Default: `"jwt_azure_devops"`
+
+### <a name="input_azure_devops_jwt_bound_issuer"></a> [azure\_devops\_jwt\_bound\_issuer](#input\_azure\_devops\_jwt\_bound\_issuer)
+
+Description: (Optional) Expected issuer (iss claim) of Azure DevOps JWT/OIDC tokens.
+
+Type: `string`
+
+Default: `"https://vstoken.dev.azure.com"`
+
+### <a name="input_azure_devops_jwt_discovery_url"></a> [azure\_devops\_jwt\_discovery\_url](#input\_azure\_devops\_jwt\_discovery\_url)
+
+Description: (Optional) OIDC discovery URL used by Vault to validate Azure DevOps JWT/OIDC tokens.
+
+Type: `string`
+
+Default: `"https://vstoken.dev.azure.com"`
+
 ### <a name="input_demo_policy_name"></a> [demo\_policy\_name](#input\_demo\_policy\_name)
 
 Description: (Optional) Name of the Vault policy for UI certificate issuance demo access.
@@ -319,6 +351,14 @@ Description: (Optional) Name of the Vault policy attached to the HCP Terraform A
 Type: `string`
 
 Default: `"jwt-hcp-aws-admin"`
+
+### <a name="input_hcp_jwt_azure_admin_policy_name"></a> [hcp\_jwt\_azure\_admin\_policy\_name](#input\_hcp\_jwt\_azure\_admin\_policy\_name)
+
+Description: (Optional) Name of the Vault policy attached to the HCP Terraform Azure JWT role for Azure auth role and ACL policy management.
+
+Type: `string`
+
+Default: `"jwt-hcp-azure-admin"`
 
 ### <a name="input_hcp_jwt_backend_description"></a> [hcp\_jwt\_backend\_description](#input\_hcp\_jwt\_backend\_description)
 
@@ -360,9 +400,25 @@ Type: `string`
 
 Default: `"jwt_hcp_aws_role"`
 
+### <a name="input_hcp_jwt_role_name_azure"></a> [hcp\_jwt\_role\_name\_azure](#input\_hcp\_jwt\_role\_name\_azure)
+
+Description: (Optional) Name of the Vault role used by the HCP Terraform Azure workspace during JWT login.
+
+Type: `string`
+
+Default: `"jwt_hcp_azure_role"`
+
 ### <a name="input_hcp_jwt_token_max_ttl_aws"></a> [hcp\_jwt\_token\_max\_ttl\_aws](#input\_hcp\_jwt\_token\_max\_ttl\_aws)
 
 Description: (Optional) Maximum lifetime of an HCP Terraform AWS Vault token, in seconds.
+
+Type: `number`
+
+Default: `600`
+
+### <a name="input_hcp_jwt_token_max_ttl_azure"></a> [hcp\_jwt\_token\_max\_ttl\_azure](#input\_hcp\_jwt\_token\_max\_ttl\_azure)
+
+Description: (Optional) Maximum lifetime of an HCP Terraform Azure Vault token, in seconds.
 
 Type: `number`
 
@@ -376,9 +432,25 @@ Type: `number`
 
 Default: `300`
 
+### <a name="input_hcp_jwt_token_ttl_azure"></a> [hcp\_jwt\_token\_ttl\_azure](#input\_hcp\_jwt\_token\_ttl\_azure)
+
+Description: (Optional) Default lifetime of an HCP Terraform Azure Vault token, in seconds.
+
+Type: `number`
+
+Default: `300`
+
 ### <a name="input_hcp_jwt_workspace_name_aws"></a> [hcp\_jwt\_workspace\_name\_aws](#input\_hcp\_jwt\_workspace\_name\_aws)
 
 Description: (Optional) The HCP Terraform AWS workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform AWS JWT auth entirely.
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_hcp_jwt_workspace_name_azure"></a> [hcp\_jwt\_workspace\_name\_azure](#input\_hcp\_jwt\_workspace\_name\_azure)
+
+Description: (Optional) The HCP Terraform Azure workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform Azure JWT auth entirely.
 
 Type: `string`
 
@@ -539,8 +611,10 @@ Default: `""`
 The following resources are used by this module:
 
 - [vault_auth_backend.aws](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/auth_backend) (resource)
+- [vault_jwt_auth_backend.jwt_azure_devops](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend) (resource)
 - [vault_jwt_auth_backend.jwt_hcp](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend) (resource)
 - [vault_jwt_auth_backend_role.jwt_hcp_aws](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend_role) (resource)
+- [vault_jwt_auth_backend_role.jwt_hcp_azure](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend_role) (resource)
 - [vault_mount.pki_intermediate](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/mount) (resource)
 - [vault_mount.pki_root](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/mount) (resource)
 - [vault_namespace.demo](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/namespace) (resource)
@@ -554,6 +628,7 @@ The following resources are used by this module:
 - [vault_pki_secret_backend_root_cert.root_ca](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/pki_secret_backend_root_cert) (resource)
 - [vault_pki_secret_backend_root_sign_intermediate.intermediate_signed](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/pki_secret_backend_root_sign_intermediate) (resource)
 - [vault_policy.hcp_jwt_aws_admin](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/policy) (resource)
+- [vault_policy.hcp_jwt_azure_admin](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/policy) (resource)
 - [vault_policy.pki_demo](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/policy) (resource)
 
 ## Outputs
@@ -564,6 +639,10 @@ The following outputs are exported:
 
 Description: Path of the AWS auth backend in the intermediate namespace.
 
+### <a name="output_azure_auth_backend_path"></a> [azure\_auth\_backend\_path](#output\_azure\_auth\_backend\_path)
+
+Description: Path of the Azure DevOps JWT/OIDC auth backend in the intermediate namespace. Null when hcp\_jwt\_workspace\_name\_azure is not set.
+
 ### <a name="output_demo_policy_name"></a> [demo\_policy\_name](#output\_demo\_policy\_name)
 
 Description: Name of the PKI issuance policy created for existing Vault identities.
@@ -572,6 +651,10 @@ Description: Name of the PKI issuance policy created for existing Vault identiti
 
 Description: Name of the Vault policy granting HCP Terraform AWS JWT role access to manage AWS auth roles and ACL policies. Null when hcp\_jwt\_workspace\_name\_aws is not set.
 
+### <a name="output_jwt_hcp_azure_admin_policy_name"></a> [jwt\_hcp\_azure\_admin\_policy\_name](#output\_jwt\_hcp\_azure\_admin\_policy\_name)
+
+Description: Name of the Vault policy granting HCP Terraform Azure JWT role access to manage PKI roles/certificates and ACL policies. Null when hcp\_jwt\_workspace\_name\_azure is not set.
+
 ### <a name="output_jwt_hcp_backend_path"></a> [jwt\_hcp\_backend\_path](#output\_jwt\_hcp\_backend\_path)
 
 Description: Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when hcp\_jwt\_workspace\_name\_aws is not set.
@@ -579,6 +662,10 @@ Description: Mount path of the HCP Terraform JWT auth backend in the intermediat
 ### <a name="output_jwt_hcp_role_name_aws"></a> [jwt\_hcp\_role\_name\_aws](#output\_jwt\_hcp\_role\_name\_aws)
 
 Description: Name of the Vault role that the HCP Terraform AWS workspace must use for dynamic provider credentials. Null when hcp\_jwt\_workspace\_name\_aws is not set.
+
+### <a name="output_jwt_hcp_role_name_azure"></a> [jwt\_hcp\_role\_name\_azure](#output\_jwt\_hcp\_role\_name\_azure)
+
+Description: Name of the Vault role that the HCP Terraform Azure workspace must use for dynamic provider credentials. Null when hcp\_jwt\_workspace\_name\_azure is not set.
 
 ### <a name="output_namespace_path"></a> [namespace\_path](#output\_namespace\_path)
 
