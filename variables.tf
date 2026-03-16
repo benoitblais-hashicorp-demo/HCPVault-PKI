@@ -1,3 +1,25 @@
+variable "aws_auth_backend_description" {
+  type        = string
+  description = "(Optional) Description for the AWS auth backend used by Lambda authentication workflows."
+  default     = "AWS auth backend for Lambda authentication and role management."
+
+  validation {
+    condition     = length(var.aws_auth_backend_description) > 0
+    error_message = "`aws_auth_backend_description` must not be empty."
+  }
+}
+
+variable "aws_auth_backend_path" {
+  type        = string
+  description = "(Optional) Path to mount the AWS auth backend in the intermediate child namespace."
+  default     = "aws"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9_-]*$", var.aws_auth_backend_path))
+    error_message = "`aws_auth_backend_path` must contain only lowercase letters, numbers, hyphens, and underscores, and must start with an alphanumeric character."
+  }
+}
+
 variable "demo_policy_name" {
   type        = string
   description = "(Optional) Name of the Vault policy for UI certificate issuance demo access."
@@ -17,6 +39,17 @@ variable "hcp_jwt_backend_description" {
   validation {
     condition     = length(var.hcp_jwt_backend_description) > 0
     error_message = "`hcp_jwt_backend_description` must not be empty."
+  }
+}
+
+variable "hcp_jwt_aws_admin_policy_name" {
+  type        = string
+  description = "(Optional) Name of the Vault policy attached to the HCP Terraform AWS JWT role for AWS auth role and ACL policy management."
+  default     = "jwt-hcp-aws-admin"
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9_-]*$", var.hcp_jwt_aws_admin_policy_name))
+    error_message = "`hcp_jwt_aws_admin_policy_name` must start with an alphanumeric character and contain only alphanumeric characters, underscores, or hyphens."
   }
 }
 

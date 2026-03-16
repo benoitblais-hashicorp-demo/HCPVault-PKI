@@ -186,6 +186,52 @@ EOT
 # HCP Terraform Client Authentication (Child Namespace)
 # ------------------------------------------------------------------------------
 
+resource "vault_auth_backend" "aws" {
+  namespace = local.pki_intermediate_namespace_full_path
+
+  type        = "aws"
+  path        = var.aws_auth_backend_path
+  description = var.aws_auth_backend_description
+
+  depends_on = [vault_namespace.pki_intermediate]
+}
+
+resource "vault_policy" "hcp_jwt_aws_admin" {
+  count = var.hcp_jwt_workspace_name_aws != null ? 1 : 0
+
+  namespace = local.pki_intermediate_namespace_full_path
+
+  name = var.hcp_jwt_aws_admin_policy_name
+
+  policy = <<EOT
+path "auth/${var.aws_auth_backend_path}/role" {
+  capabilities = ["list"]
+}
+
+path "auth/${var.aws_auth_backend_path}/role/*" {
+  capabilities = ["create", "update", "read", "delete", "list"]
+}
+
+path "auth/${var.aws_auth_backend_path}/roles" {
+  capabilities = ["list"]
+}
+
+path "auth/${var.aws_auth_backend_path}/roles/*" {
+  capabilities = ["create", "update", "read", "delete", "list"]
+}
+
+path "sys/policies/acl" {
+  capabilities = ["list"]
+}
+
+path "sys/policies/acl/*" {
+  capabilities = ["create", "update", "read", "delete", "list"]
+}
+EOT
+
+  depends_on = [vault_auth_backend.aws]
+}
+
 resource "vault_jwt_auth_backend" "jwt_hcp" {
   count = var.hcp_jwt_workspace_name_aws != null ? 1 : 0
 
@@ -215,10 +261,13 @@ resource "vault_jwt_auth_backend_role" "jwt_hcp_aws" {
     terraform_workspace_name = var.hcp_jwt_workspace_name_aws
   }
 
-  token_policies          = [vault_policy.pki_demo.name]
+  token_policies = concat(
+    [vault_policy.pki_demo.name],
+    length(vault_policy.hcp_jwt_aws_admin) > 0 ? [vault_policy.hcp_jwt_aws_admin[0].name] : []
+  )
   token_ttl               = var.hcp_jwt_token_ttl_aws
   token_max_ttl           = var.hcp_jwt_token_max_ttl_aws
   token_no_default_policy = true
 
-  depends_on = [vault_policy.pki_demo]
+  depends_on = [vault_policy.pki_demo, vault_policy.hcp_jwt_aws_admin]
 }
