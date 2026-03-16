@@ -208,6 +208,9 @@ concurrent demos.
 - Intermediate signing and import (`vault_pki_secret_backend_root_sign_intermediate`, `vault_pki_secret_backend_intermediate_set_signed`)
 - Optional AIA/CRL URL configuration (`vault_pki_secret_backend_config_urls`)
 - PKI role for issuance (`vault_pki_secret_backend_role`)
+- AWS auth backend for Lambda authentication workflows (`vault_auth_backend`)
+- HCP Terraform JWT auth backend and role (`vault_jwt_auth_backend`, `vault_jwt_auth_backend_role`)
+- JWT AWS admin policy for AWS auth role and ACL policy management (`vault_policy`)
 
 ## Permissions
 
@@ -254,6 +257,9 @@ Documentation:
 - Dedicated root and intermediate child namespaces under one demo namespace
 - Root/intermediate CA hierarchy for PKI best practice
 - Policy-limited certificate issuance path (`pki-int/issue/<role>`)
+- HCP Terraform JWT login path scoped to a single workspace
+- AWS auth backend provisioning for Lambda-oriented authentication flows
+- JWT AWS role policy allowing AWS auth role and ACL policy creation/management
 - Opinionated defaults with variables for domain, role name, and TTLs
 
 ## Demo Value Proposition
@@ -282,6 +288,22 @@ No required inputs.
 
 The following input variables are optional (have default values):
 
+### <a name="input_aws_auth_backend_description"></a> [aws\_auth\_backend\_description](#input\_aws\_auth\_backend\_description)
+
+Description: (Optional) Description for the AWS auth backend used by Lambda authentication workflows.
+
+Type: `string`
+
+Default: `"AWS auth backend for Lambda authentication and role management."`
+
+### <a name="input_aws_auth_backend_path"></a> [aws\_auth\_backend\_path](#input\_aws\_auth\_backend\_path)
+
+Description: (Optional) Path to mount the AWS auth backend in the intermediate child namespace.
+
+Type: `string`
+
+Default: `"aws"`
+
 ### <a name="input_demo_policy_name"></a> [demo\_policy\_name](#input\_demo\_policy\_name)
 
 Description: (Optional) Name of the Vault policy for UI certificate issuance demo access.
@@ -289,6 +311,78 @@ Description: (Optional) Name of the Vault policy for UI certificate issuance dem
 Type: `string`
 
 Default: `"pki-demo-ui-issuer"`
+
+### <a name="input_hcp_jwt_aws_admin_policy_name"></a> [hcp\_jwt\_aws\_admin\_policy\_name](#input\_hcp\_jwt\_aws\_admin\_policy\_name)
+
+Description: (Optional) Name of the Vault policy attached to the HCP Terraform AWS JWT role for AWS auth role and ACL policy management.
+
+Type: `string`
+
+Default: `"jwt-hcp-aws-admin"`
+
+### <a name="input_hcp_jwt_backend_description"></a> [hcp\_jwt\_backend\_description](#input\_hcp\_jwt\_backend\_description)
+
+Description: (Optional) The description of the HCP Terraform JWT auth backend.
+
+Type: `string`
+
+Default: `"JWT auth method for HCP Terraform workload identity tokens."`
+
+### <a name="input_hcp_jwt_backend_path"></a> [hcp\_jwt\_backend\_path](#input\_hcp\_jwt\_backend\_path)
+
+Description: (Optional) Path to mount the JWT auth backend for the HCP Terraform JWT.
+
+Type: `string`
+
+Default: `"jwt_hcp"`
+
+### <a name="input_hcp_jwt_bound_issuer"></a> [hcp\_jwt\_bound\_issuer](#input\_hcp\_jwt\_bound\_issuer)
+
+Description: (Optional) Expected issuer (iss claim) of HCP Terraform workload identity JWT tokens.
+
+Type: `string`
+
+Default: `"https://app.terraform.io"`
+
+### <a name="input_hcp_jwt_discovery_url"></a> [hcp\_jwt\_discovery\_url](#input\_hcp\_jwt\_discovery\_url)
+
+Description: (Optional) OIDC discovery URL used by Vault to retrieve the HCP Terraform JWKS and validate token signatures.
+
+Type: `string`
+
+Default: `"https://app.terraform.io"`
+
+### <a name="input_hcp_jwt_role_name_aws"></a> [hcp\_jwt\_role\_name\_aws](#input\_hcp\_jwt\_role\_name\_aws)
+
+Description: (Optional) Name of the Vault role used by the HCP Terraform AWS workspace during JWT login.
+
+Type: `string`
+
+Default: `"jwt_hcp_aws_role"`
+
+### <a name="input_hcp_jwt_token_max_ttl_aws"></a> [hcp\_jwt\_token\_max\_ttl\_aws](#input\_hcp\_jwt\_token\_max\_ttl\_aws)
+
+Description: (Optional) Maximum lifetime of an HCP Terraform AWS Vault token, in seconds.
+
+Type: `number`
+
+Default: `600`
+
+### <a name="input_hcp_jwt_token_ttl_aws"></a> [hcp\_jwt\_token\_ttl\_aws](#input\_hcp\_jwt\_token\_ttl\_aws)
+
+Description: (Optional) Default lifetime of an HCP Terraform AWS Vault token, in seconds.
+
+Type: `number`
+
+Default: `300`
+
+### <a name="input_hcp_jwt_workspace_name_aws"></a> [hcp\_jwt\_workspace\_name\_aws](#input\_hcp\_jwt\_workspace\_name\_aws)
+
+Description: (Optional) The HCP Terraform AWS workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform AWS JWT auth entirely.
+
+Type: `string`
+
+Default: `null`
 
 ### <a name="input_namespace_path"></a> [namespace\_path](#input\_namespace\_path)
 
@@ -444,6 +538,9 @@ Default: `""`
 
 The following resources are used by this module:
 
+- [vault_auth_backend.aws](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/auth_backend) (resource)
+- [vault_jwt_auth_backend.jwt_hcp](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend) (resource)
+- [vault_jwt_auth_backend_role.jwt_hcp_aws](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend_role) (resource)
 - [vault_mount.pki_intermediate](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
 - [vault_mount.pki_root](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
 - [vault_namespace.demo](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/namespace) (resource)
@@ -456,15 +553,32 @@ The following resources are used by this module:
 - [vault_pki_secret_backend_role.issue_role](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_role) (resource)
 - [vault_pki_secret_backend_root_cert.root_ca](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_root_cert) (resource)
 - [vault_pki_secret_backend_root_sign_intermediate.intermediate_signed](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_root_sign_intermediate) (resource)
+- [vault_policy.hcp_jwt_aws_admin](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/policy) (resource)
 - [vault_policy.pki_demo](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/policy) (resource)
 
 ## Outputs
 
 The following outputs are exported:
 
+### <a name="output_aws_auth_backend_path"></a> [aws\_auth\_backend\_path](#output\_aws\_auth\_backend\_path)
+
+Description: Path of the AWS auth backend in the intermediate namespace.
+
 ### <a name="output_demo_policy_name"></a> [demo\_policy\_name](#output\_demo\_policy\_name)
 
 Description: Name of the PKI issuance policy created for existing Vault identities.
+
+### <a name="output_jwt_hcp_aws_admin_policy_name"></a> [jwt\_hcp\_aws\_admin\_policy\_name](#output\_jwt\_hcp\_aws\_admin\_policy\_name)
+
+Description: Name of the Vault policy granting HCP Terraform AWS JWT role access to manage AWS auth roles and ACL policies. Null when hcp\_jwt\_workspace\_name\_aws is not set.
+
+### <a name="output_jwt_hcp_backend_path"></a> [jwt\_hcp\_backend\_path](#output\_jwt\_hcp\_backend\_path)
+
+Description: Mount path of the HCP Terraform JWT auth backend in the intermediate namespace. Null when hcp\_jwt\_workspace\_name\_aws is not set.
+
+### <a name="output_jwt_hcp_role_name_aws"></a> [jwt\_hcp\_role\_name\_aws](#output\_jwt\_hcp\_role\_name\_aws)
+
+Description: Name of the Vault role that the HCP Terraform AWS workspace must use for dynamic provider credentials. Null when hcp\_jwt\_workspace\_name\_aws is not set.
 
 ### <a name="output_namespace_path"></a> [namespace\_path](#output\_namespace\_path)
 
@@ -494,6 +608,7 @@ Description: Child namespace path under the demo namespace for root PKI resource
 # External Documentation
 
 - [Vault PKI Secrets Engine](https://developer.hashicorp.com/vault/docs/secrets/pki)
+- [Vault AWS Auth Method](https://developer.hashicorp.com/vault/docs/auth/aws)
 - [Vault Policy Concepts](https://developer.hashicorp.com/vault/docs/concepts/policies)
 - [Vault Provider (Terraform Registry)](https://registry.terraform.io/providers/hashicorp/vault/latest/docs)
 <!-- END_TF_DOCS -->
