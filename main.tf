@@ -243,6 +243,10 @@ path "${var.pki_intermediate_mount_path}/issue/*" {
 path "${var.pki_intermediate_mount_path}/cert/*" {
   capabilities = ["read", "list"]
 }
+
+path "sys/mounts/${var.pki_intermediate_mount_path}" {
+  capabilities = ["read"]
+}
 EOT
 
   depends_on = [vault_auth_backend.aws]
