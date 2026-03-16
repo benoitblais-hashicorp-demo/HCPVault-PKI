@@ -20,6 +20,50 @@ variable "aws_auth_backend_path" {
   }
 }
 
+variable "azure_devops_jwt_backend_description" {
+  type        = string
+  description = "(Optional) Description for the Azure DevOps JWT/OIDC auth backend."
+  default     = "JWT/OIDC auth backend for Azure DevOps pipelines."
+
+  validation {
+    condition     = length(var.azure_devops_jwt_backend_description) > 0
+    error_message = "`azure_devops_jwt_backend_description` must not be empty."
+  }
+}
+
+variable "azure_devops_jwt_backend_path" {
+  type        = string
+  description = "(Optional) Path to mount the Azure DevOps JWT/OIDC auth backend in the intermediate child namespace."
+  default     = "jwt_azure_devops"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9_-]*$", var.azure_devops_jwt_backend_path))
+    error_message = "`azure_devops_jwt_backend_path` must contain only lowercase letters, numbers, hyphens, and underscores, and must start with an alphanumeric character."
+  }
+}
+
+variable "azure_devops_jwt_bound_issuer" {
+  type        = string
+  description = "(Optional) Expected issuer (iss claim) of Azure DevOps JWT/OIDC tokens."
+  default     = "https://vstoken.dev.azure.com"
+
+  validation {
+    condition     = can(regex("^https://", var.azure_devops_jwt_bound_issuer))
+    error_message = "`azure_devops_jwt_bound_issuer` must be a valid HTTPS URL."
+  }
+}
+
+variable "azure_devops_jwt_discovery_url" {
+  type        = string
+  description = "(Optional) OIDC discovery URL used by Vault to validate Azure DevOps JWT/OIDC tokens."
+  default     = "https://vstoken.dev.azure.com"
+
+  validation {
+    condition     = can(regex("^https://", var.azure_devops_jwt_discovery_url))
+    error_message = "`azure_devops_jwt_discovery_url` must be a valid HTTPS URL."
+  }
+}
+
 variable "demo_policy_name" {
   type        = string
   description = "(Optional) Name of the Vault policy for UI certificate issuance demo access."
@@ -50,6 +94,17 @@ variable "hcp_jwt_aws_admin_policy_name" {
   validation {
     condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9_-]*$", var.hcp_jwt_aws_admin_policy_name))
     error_message = "`hcp_jwt_aws_admin_policy_name` must start with an alphanumeric character and contain only alphanumeric characters, underscores, or hyphens."
+  }
+}
+
+variable "hcp_jwt_azure_admin_policy_name" {
+  type        = string
+  description = "(Optional) Name of the Vault policy attached to the HCP Terraform Azure JWT role for Azure auth role and ACL policy management."
+  default     = "jwt-hcp-azure-admin"
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9_-]*$", var.hcp_jwt_azure_admin_policy_name))
+    error_message = "`hcp_jwt_azure_admin_policy_name` must start with an alphanumeric character and contain only alphanumeric characters, underscores, or hyphens."
   }
 }
 
@@ -127,6 +182,50 @@ variable "hcp_jwt_workspace_name_aws" {
   validation {
     condition     = var.hcp_jwt_workspace_name_aws == null || length(var.hcp_jwt_workspace_name_aws) > 0
     error_message = "`hcp_jwt_workspace_name_aws` must not be an empty string when set."
+  }
+}
+
+variable "hcp_jwt_role_name_azure" {
+  type        = string
+  description = "(Optional) Name of the Vault role used by the HCP Terraform Azure workspace during JWT login."
+  default     = "jwt_hcp_azure_role"
+
+  validation {
+    condition     = length(var.hcp_jwt_role_name_azure) > 0
+    error_message = "`hcp_jwt_role_name_azure` must not be empty."
+  }
+}
+
+variable "hcp_jwt_token_max_ttl_azure" {
+  type        = number
+  description = "(Optional) Maximum lifetime of an HCP Terraform Azure Vault token, in seconds."
+  default     = 600
+
+  validation {
+    condition     = var.hcp_jwt_token_max_ttl_azure > 0
+    error_message = "`hcp_jwt_token_max_ttl_azure` must be greater than 0."
+  }
+}
+
+variable "hcp_jwt_token_ttl_azure" {
+  type        = number
+  description = "(Optional) Default lifetime of an HCP Terraform Azure Vault token, in seconds."
+  default     = 300
+
+  validation {
+    condition     = var.hcp_jwt_token_ttl_azure > 0
+    error_message = "`hcp_jwt_token_ttl_azure` must be greater than 0."
+  }
+}
+
+variable "hcp_jwt_workspace_name_azure" {
+  type        = string
+  description = "(Optional) The HCP Terraform Azure workspace name that is allowed to authenticate to Vault. Set to null to skip HCP Terraform Azure JWT auth entirely."
+  default     = null
+
+  validation {
+    condition     = var.hcp_jwt_workspace_name_azure == null || length(var.hcp_jwt_workspace_name_azure) > 0
+    error_message = "`hcp_jwt_workspace_name_azure` must not be an empty string when set."
   }
 }
 
