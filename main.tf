@@ -267,7 +267,7 @@ resource "vault_jwt_auth_backend_role" "jwt_hcp_aws" {
   )
   token_ttl               = var.hcp_jwt_token_ttl_aws
   token_max_ttl           = var.hcp_jwt_token_max_ttl_aws
-  token_no_default_policy = true
+  token_no_default_policy = false
 
   depends_on = [vault_policy.pki_demo, vault_policy.hcp_jwt_aws_admin]
 }
