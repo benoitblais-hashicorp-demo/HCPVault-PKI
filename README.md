@@ -408,19 +408,19 @@ Default:
 
 ### <a name="input_pki_cert_max_ttl"></a> [pki\_cert\_max\_ttl](#input\_pki\_cert\_max\_ttl)
 
-Description: (Optional) Maximum TTL for certificates issued by the intermediate PKI role.
+Description: (Optional) Maximum TTL for certificates issued by the intermediate PKI role. Accepts canonical seconds (recommended) or duration values.
 
 Type: `string`
 
-Default: `"720h"`
+Default: `"2592000"`
 
 ### <a name="input_pki_cert_ttl"></a> [pki\_cert\_ttl](#input\_pki\_cert\_ttl)
 
-Description: (Optional) Default TTL for certificates issued by the intermediate PKI role.
+Description: (Optional) Default TTL for certificates issued by the intermediate PKI role. Accepts canonical seconds (recommended) or duration values.
 
 Type: `string`
 
-Default: `"72h"`
+Default: `"259200"`
 
 ### <a name="input_pki_intermediate_ca_ttl"></a> [pki\_intermediate\_ca\_ttl](#input\_pki\_intermediate\_ca\_ttl)
 
