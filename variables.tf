@@ -156,23 +156,23 @@ variable "pki_allowed_domains" {
 
 variable "pki_cert_max_ttl" {
   type        = string
-  description = "(Optional) Maximum TTL for certificates issued by the intermediate PKI role."
-  default     = "720h"
+  description = "(Optional) Maximum TTL for certificates issued by the intermediate PKI role. Accepts canonical seconds (recommended) or duration values."
+  default     = "2592000"
 
   validation {
-    condition     = can(regex("^[1-9][0-9]*[smhd]$", var.pki_cert_max_ttl))
-    error_message = "`pki_cert_max_ttl` must be a positive duration like `72h`, `30m`, or `7d`."
+    condition     = can(regex("^[1-9][0-9]*([smhd])?$", var.pki_cert_max_ttl))
+    error_message = "`pki_cert_max_ttl` must be a positive duration (for example `72h`, `30m`, or `7d`) or canonical seconds (for example `2592000`)."
   }
 }
 
 variable "pki_cert_ttl" {
   type        = string
-  description = "(Optional) Default TTL for certificates issued by the intermediate PKI role."
-  default     = "72h"
+  description = "(Optional) Default TTL for certificates issued by the intermediate PKI role. Accepts canonical seconds (recommended) or duration values."
+  default     = "259200"
 
   validation {
-    condition     = can(regex("^[1-9][0-9]*[smhd]$", var.pki_cert_ttl))
-    error_message = "`pki_cert_ttl` must be a positive duration like `72h`, `30m`, or `7d`."
+    condition     = can(regex("^[1-9][0-9]*([smhd])?$", var.pki_cert_ttl))
+    error_message = "`pki_cert_ttl` must be a positive duration (for example `72h`, `30m`, or `7d`) or canonical seconds (for example `259200`)."
   }
 }
 
