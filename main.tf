@@ -227,6 +227,22 @@ path "sys/policies/acl" {
 path "sys/policies/acl/*" {
   capabilities = ["create", "update", "read", "delete", "list"]
 }
+
+path "${var.pki_intermediate_mount_path}/roles" {
+  capabilities = ["list"]
+}
+
+path "${var.pki_intermediate_mount_path}/roles/*" {
+  capabilities = ["create", "update", "read", "delete", "list"]
+}
+
+path "${var.pki_intermediate_mount_path}/issue/*" {
+  capabilities = ["create", "update"]
+}
+
+path "${var.pki_intermediate_mount_path}/cert/*" {
+  capabilities = ["read", "list"]
+}
 EOT
 
   depends_on = [vault_auth_backend.aws]
