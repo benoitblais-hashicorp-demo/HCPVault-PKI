@@ -274,7 +274,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.10)
 
-- <a name="requirement_vault"></a> [vault](#requirement\_vault) (5.7.0)
+- <a name="requirement_vault"></a> [vault](#requirement\_vault) (5.8.0)
 
 ## Modules
 
@@ -538,23 +538,23 @@ Default: `""`
 
 The following resources are used by this module:
 
-- [vault_auth_backend.aws](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/auth_backend) (resource)
-- [vault_jwt_auth_backend.jwt_hcp](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend) (resource)
-- [vault_jwt_auth_backend_role.jwt_hcp_aws](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/jwt_auth_backend_role) (resource)
-- [vault_mount.pki_intermediate](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
-- [vault_mount.pki_root](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/mount) (resource)
-- [vault_namespace.demo](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/namespace) (resource)
-- [vault_namespace.pki_intermediate](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/namespace) (resource)
-- [vault_namespace.pki_root](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/namespace) (resource)
-- [vault_pki_secret_backend_config_urls.intermediate_urls](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_config_urls) (resource)
-- [vault_pki_secret_backend_config_urls.root_urls](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_config_urls) (resource)
-- [vault_pki_secret_backend_intermediate_cert_request.intermediate_csr](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_intermediate_cert_request) (resource)
-- [vault_pki_secret_backend_intermediate_set_signed.intermediate_import](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_intermediate_set_signed) (resource)
-- [vault_pki_secret_backend_role.issue_role](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_role) (resource)
-- [vault_pki_secret_backend_root_cert.root_ca](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_root_cert) (resource)
-- [vault_pki_secret_backend_root_sign_intermediate.intermediate_signed](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/pki_secret_backend_root_sign_intermediate) (resource)
-- [vault_policy.hcp_jwt_aws_admin](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/policy) (resource)
-- [vault_policy.pki_demo](https://registry.terraform.io/providers/hashicorp/vault/5.7.0/docs/resources/policy) (resource)
+- [vault_auth_backend.aws](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/auth_backend) (resource)
+- [vault_jwt_auth_backend.jwt_hcp](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend) (resource)
+- [vault_jwt_auth_backend_role.jwt_hcp_aws](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend_role) (resource)
+- [vault_mount.pki_intermediate](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/mount) (resource)
+- [vault_mount.pki_root](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/mount) (resource)
+- [vault_namespace.demo](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/namespace) (resource)
+- [vault_namespace.pki_intermediate](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/namespace) (resource)
+- [vault_namespace.pki_root](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/namespace) (resource)
+- [vault_pki_secret_backend_config_urls.intermediate_urls](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/pki_secret_backend_config_urls) (resource)
+- [vault_pki_secret_backend_config_urls.root_urls](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/pki_secret_backend_config_urls) (resource)
+- [vault_pki_secret_backend_intermediate_cert_request.intermediate_csr](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/pki_secret_backend_intermediate_cert_request) (resource)
+- [vault_pki_secret_backend_intermediate_set_signed.intermediate_import](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/pki_secret_backend_intermediate_set_signed) (resource)
+- [vault_pki_secret_backend_role.issue_role](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/pki_secret_backend_role) (resource)
+- [vault_pki_secret_backend_root_cert.root_ca](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/pki_secret_backend_root_cert) (resource)
+- [vault_pki_secret_backend_root_sign_intermediate.intermediate_signed](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/pki_secret_backend_root_sign_intermediate) (resource)
+- [vault_policy.hcp_jwt_aws_admin](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/policy) (resource)
+- [vault_policy.pki_demo](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/policy) (resource)
 
 ## Outputs
 
