@@ -307,7 +307,7 @@ EOT
 }
 
 resource "vault_jwt_auth_backend" "jwt_hcp" {
-  count = var.hcp_jwt_workspace_name_aws != null ? 1 : 0
+  count = var.hcp_jwt_workspace_name_aws != null || var.hcp_jwt_workspace_name_azure != null ? 1 : 0
 
   namespace = local.pki_intermediate_namespace_full_path
 
@@ -347,11 +347,11 @@ resource "vault_jwt_auth_backend_role" "jwt_hcp_aws" {
 }
 
 resource "vault_jwt_auth_backend_role" "jwt_hcp_azure" {
-  count = var.hcp_jwt_workspace_name_azure != null && length(vault_jwt_auth_backend.jwt_azure_devops) > 0 ? 1 : 0
+  count = var.hcp_jwt_workspace_name_azure != null && length(vault_jwt_auth_backend.jwt_hcp) > 0 ? 1 : 0
 
   namespace = local.pki_intermediate_namespace_full_path
 
-  backend         = vault_jwt_auth_backend.jwt_azure_devops[0].path
+  backend         = vault_jwt_auth_backend.jwt_hcp[0].path
   role_name       = var.hcp_jwt_role_name_azure
   role_type       = "jwt"
   user_claim      = "terraform_workspace_name"
