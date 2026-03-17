@@ -304,21 +304,37 @@ Type: `string`
 
 Default: `"aws"`
 
+### <a name="input_azure_devops_jwt_backend_description"></a> [azure\_devops\_jwt\_backend\_description](#input\_azure\_devops\_jwt\_backend\_description)
+
+Description: (Optional) Description for the Azure DevOps JWT/OIDC auth backend.
+
+Type: `string`
+
+Default: `"JWT/OIDC auth backend for Azure DevOps pipelines."`
+
 ### <a name="input_azure_devops_jwt_backend_path"></a> [azure\_devops\_jwt\_backend\_path](#input\_azure\_devops\_jwt\_backend\_path)
 
-Description: (Optional) Path that the Azure HCP Terraform role is allowed to use when creating the Azure DevOps JWT/OIDC auth backend in the intermediate child namespace.
+Description: (Optional) Path to mount the Azure DevOps JWT/OIDC auth backend in the intermediate child namespace.
 
 Type: `string`
 
 Default: `"jwt_azure_devops"`
 
-### <a name="input_azure_kv_v2_mount_path"></a> [azure\_kv\_v2\_mount\_path](#input\_azure\_kv\_v2\_mount\_path)
+### <a name="input_azure_devops_jwt_bound_issuer"></a> [azure\_devops\_jwt\_bound\_issuer](#input\_azure\_devops\_jwt\_bound\_issuer)
 
-Description: (Optional) Path that the Azure HCP Terraform role is allowed to use when enabling a KV v2 secrets engine in the intermediate child namespace.
+Description: (Optional) Expected issuer (iss claim) of Azure DevOps JWT/OIDC tokens.
 
 Type: `string`
 
-Default: `"kv-azure-pki-demo"`
+Default: `"https://vstoken.dev.azure.com"`
+
+### <a name="input_azure_devops_jwt_discovery_url"></a> [azure\_devops\_jwt\_discovery\_url](#input\_azure\_devops\_jwt\_discovery\_url)
+
+Description: (Optional) OIDC discovery URL used by Vault to validate Azure DevOps JWT/OIDC tokens.
+
+Type: `string`
+
+Default: `"https://vstoken.dev.azure.com"`
 
 ### <a name="input_demo_policy_name"></a> [demo\_policy\_name](#input\_demo\_policy\_name)
 
@@ -595,6 +611,7 @@ Default: `""`
 The following resources are used by this module:
 
 - [vault_auth_backend.aws](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/auth_backend) (resource)
+- [vault_jwt_auth_backend.jwt_azure_devops](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend) (resource)
 - [vault_jwt_auth_backend.jwt_hcp](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend) (resource)
 - [vault_jwt_auth_backend_role.jwt_hcp_aws](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend_role) (resource)
 - [vault_jwt_auth_backend_role.jwt_hcp_azure](https://registry.terraform.io/providers/hashicorp/vault/5.8.0/docs/resources/jwt_auth_backend_role) (resource)
@@ -622,13 +639,9 @@ The following outputs are exported:
 
 Description: Path of the AWS auth backend in the intermediate namespace.
 
-### <a name="output_azure_devops_jwt_backend_path"></a> [azure\_devops\_jwt\_backend\_path](#output\_azure\_devops\_jwt\_backend\_path)
+### <a name="output_azure_auth_backend_path"></a> [azure\_auth\_backend\_path](#output\_azure\_auth\_backend\_path)
 
-Description: Path that the Azure HCP Terraform role is allowed to use when creating the Azure DevOps JWT/OIDC auth backend in the intermediate namespace.
-
-### <a name="output_azure_kv_v2_mount_path"></a> [azure\_kv\_v2\_mount\_path](#output\_azure\_kv\_v2\_mount\_path)
-
-Description: Path that the Azure HCP Terraform role is allowed to use when enabling a KV v2 secrets engine in the intermediate namespace.
+Description: Path of the Azure DevOps JWT/OIDC auth backend in the intermediate namespace. Null when hcp\_jwt\_workspace\_name\_azure is not set.
 
 ### <a name="output_demo_policy_name"></a> [demo\_policy\_name](#output\_demo\_policy\_name)
 
