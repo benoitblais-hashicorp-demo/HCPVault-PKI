@@ -196,20 +196,6 @@ resource "vault_auth_backend" "aws" {
   depends_on = [vault_namespace.pki_intermediate]
 }
 
-resource "vault_jwt_auth_backend" "jwt_azure_devops" {
-  count = var.hcp_jwt_workspace_name_azure != null ? 1 : 0
-
-  namespace = local.pki_intermediate_namespace_full_path
-
-  description        = var.azure_devops_jwt_backend_description
-  path               = var.azure_devops_jwt_backend_path
-  type               = "jwt"
-  oidc_discovery_url = var.azure_devops_jwt_discovery_url
-  bound_issuer       = var.azure_devops_jwt_bound_issuer
-
-  depends_on = [vault_namespace.pki_intermediate]
-}
-
 resource "vault_policy" "hcp_jwt_aws_admin" {
   count = var.hcp_jwt_workspace_name_aws != null ? 1 : 0
 
@@ -274,12 +260,40 @@ resource "vault_policy" "hcp_jwt_azure_admin" {
   name = var.hcp_jwt_azure_admin_policy_name
 
   policy = <<EOT
+path "sys/auth" {
+  capabilities = ["read", "list"]
+}
+
+path "sys/auth/${var.azure_devops_jwt_backend_path}" {
+  capabilities = ["create", "read", "update", "delete", "sudo"]
+}
+
+path "auth/${var.azure_devops_jwt_backend_path}/config" {
+  capabilities = ["create", "read", "update", "delete"]
+}
+
+path "auth/${var.azure_devops_jwt_backend_path}/role" {
+  capabilities = ["list"]
+}
+
+path "auth/${var.azure_devops_jwt_backend_path}/role/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+
 path "sys/policies/acl" {
   capabilities = ["list"]
 }
 
 path "sys/policies/acl/*" {
   capabilities = ["create", "update", "read", "delete", "list"]
+}
+
+path "sys/mounts" {
+  capabilities = ["read", "list"]
+}
+
+path "sys/mounts/${var.azure_kv_v2_mount_path}" {
+  capabilities = ["create", "read", "update", "delete"]
 }
 
 path "${var.pki_intermediate_mount_path}/roles" {
@@ -303,7 +317,7 @@ path "sys/mounts/${var.pki_intermediate_mount_path}" {
 }
 EOT
 
-  depends_on = [vault_jwt_auth_backend.jwt_azure_devops]
+  depends_on = [vault_namespace.pki_intermediate]
 }
 
 resource "vault_jwt_auth_backend" "jwt_hcp" {

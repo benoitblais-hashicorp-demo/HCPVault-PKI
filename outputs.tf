@@ -3,9 +3,14 @@ output "aws_auth_backend_path" {
   value       = vault_auth_backend.aws.path
 }
 
-output "azure_auth_backend_path" {
-  description = "Path of the Azure DevOps JWT/OIDC auth backend in the intermediate namespace. Null when hcp_jwt_workspace_name_azure is not set."
-  value       = try(vault_jwt_auth_backend.jwt_azure_devops[0].path, null)
+output "azure_devops_jwt_backend_path" {
+  description = "Path that the Azure HCP Terraform role is allowed to use when creating the Azure DevOps JWT/OIDC auth backend in the intermediate namespace."
+  value       = var.azure_devops_jwt_backend_path
+}
+
+output "azure_kv_v2_mount_path" {
+  description = "Path that the Azure HCP Terraform role is allowed to use when enabling a KV v2 secrets engine in the intermediate namespace."
+  value       = var.azure_kv_v2_mount_path
 }
 
 output "demo_policy_name" {

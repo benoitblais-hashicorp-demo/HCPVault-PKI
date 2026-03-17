@@ -20,20 +20,9 @@ variable "aws_auth_backend_path" {
   }
 }
 
-variable "azure_devops_jwt_backend_description" {
-  type        = string
-  description = "(Optional) Description for the Azure DevOps JWT/OIDC auth backend."
-  default     = "JWT/OIDC auth backend for Azure DevOps pipelines."
-
-  validation {
-    condition     = length(var.azure_devops_jwt_backend_description) > 0
-    error_message = "`azure_devops_jwt_backend_description` must not be empty."
-  }
-}
-
 variable "azure_devops_jwt_backend_path" {
   type        = string
-  description = "(Optional) Path to mount the Azure DevOps JWT/OIDC auth backend in the intermediate child namespace."
+  description = "(Optional) Path that the Azure HCP Terraform role is allowed to use when creating the Azure DevOps JWT/OIDC auth backend in the intermediate child namespace."
   default     = "jwt_azure_devops"
 
   validation {
@@ -42,25 +31,14 @@ variable "azure_devops_jwt_backend_path" {
   }
 }
 
-variable "azure_devops_jwt_bound_issuer" {
+variable "azure_kv_v2_mount_path" {
   type        = string
-  description = "(Optional) Expected issuer (iss claim) of Azure DevOps JWT/OIDC tokens."
-  default     = "https://vstoken.dev.azure.com"
+  description = "(Optional) Path that the Azure HCP Terraform role is allowed to use when enabling a KV v2 secrets engine in the intermediate child namespace."
+  default     = "kv-azure-pki-demo"
 
   validation {
-    condition     = can(regex("^https://", var.azure_devops_jwt_bound_issuer))
-    error_message = "`azure_devops_jwt_bound_issuer` must be a valid HTTPS URL."
-  }
-}
-
-variable "azure_devops_jwt_discovery_url" {
-  type        = string
-  description = "(Optional) OIDC discovery URL used by Vault to validate Azure DevOps JWT/OIDC tokens."
-  default     = "https://vstoken.dev.azure.com"
-
-  validation {
-    condition     = can(regex("^https://", var.azure_devops_jwt_discovery_url))
-    error_message = "`azure_devops_jwt_discovery_url` must be a valid HTTPS URL."
+    condition     = can(regex("^[a-z0-9][a-z0-9-]*[a-z0-9]$", var.azure_kv_v2_mount_path))
+    error_message = "`azure_kv_v2_mount_path` must contain only lowercase letters, numbers, and hyphens, and must start and end with an alphanumeric character."
   }
 }
 
