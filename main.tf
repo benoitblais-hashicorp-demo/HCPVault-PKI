@@ -268,6 +268,10 @@ path "sys/auth/${var.azure_devops_jwt_backend_path}" {
   capabilities = ["create", "read", "update", "delete", "sudo"]
 }
 
+path "sys/mounts/auth/${var.azure_devops_jwt_backend_path}" {
+  capabilities = ["create", "read", "update", "delete", "sudo"]
+}
+
 path "auth/${var.azure_devops_jwt_backend_path}/config" {
   capabilities = ["create", "read", "update", "delete"]
 }
