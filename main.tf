@@ -304,6 +304,14 @@ path "sys/mounts/${var.azure_kv_v2_mount_path}" {
   capabilities = ["create", "read", "update", "delete"]
 }
 
+path "sys/mounts/${var.azure_kv_v2_mount_path}/tune" {
+  capabilities = ["read", "update", "sudo"]
+}
+
+path "${var.azure_kv_v2_mount_path}/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+
 path "${var.pki_intermediate_mount_path}/roles" {
   capabilities = ["list"]
 }
