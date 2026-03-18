@@ -20,6 +20,17 @@ variable "aws_auth_backend_path" {
   }
 }
 
+variable "azure_automation_approle_backend_path" {
+  type        = string
+  description = "(Optional) Path that the Azure HCP Terraform role is allowed to use when creating the Azure automation AppRole auth backend in the intermediate child namespace."
+  default     = "approle"
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9_-]*$", var.azure_automation_approle_backend_path))
+    error_message = "`azure_automation_approle_backend_path` must contain only lowercase letters, numbers, hyphens, and underscores, and must start with an alphanumeric character."
+  }
+}
+
 variable "azure_automation_jwt_backend_path" {
   type        = string
   description = "(Optional) Path that the Azure HCP Terraform role is allowed to use when creating the Azure automation JWT/OIDC auth backend in the intermediate child namespace."

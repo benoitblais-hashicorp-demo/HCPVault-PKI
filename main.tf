@@ -288,6 +288,42 @@ path "auth/${var.azure_automation_jwt_backend_path}/role/*" {
   capabilities = ["create", "read", "update", "delete", "list"]
 }
 
+path "sys/auth/${var.azure_automation_approle_backend_path}" {
+  capabilities = ["create", "read", "update", "delete", "sudo"]
+}
+
+path "sys/mounts/auth/${var.azure_automation_approle_backend_path}" {
+  capabilities = ["create", "read", "update", "delete", "sudo"]
+}
+
+path "sys/mounts/auth/${var.azure_automation_approle_backend_path}/tune" {
+  capabilities = ["read", "update", "sudo"]
+}
+
+path "auth/${var.azure_automation_approle_backend_path}/role" {
+  capabilities = ["list"]
+}
+
+path "auth/${var.azure_automation_approle_backend_path}/role/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+
+path "auth/${var.azure_automation_approle_backend_path}/role/*/role-id" {
+  capabilities = ["read"]
+}
+
+path "auth/${var.azure_automation_approle_backend_path}/role/*/secret-id" {
+  capabilities = ["create", "update"]
+}
+
+path "auth/${var.azure_automation_approle_backend_path}/role/*/secret-id-accessor/*" {
+  capabilities = ["read", "delete"]
+}
+
+path "auth/${var.azure_automation_approle_backend_path}/tidy/secret-id" {
+  capabilities = ["update", "sudo"]
+}
+
 path "sys/policies/acl" {
   capabilities = ["list"]
 }

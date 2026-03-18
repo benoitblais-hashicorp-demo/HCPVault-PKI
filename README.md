@@ -304,6 +304,14 @@ Type: `string`
 
 Default: `"aws"`
 
+### <a name="input_azure_automation_approle_backend_path"></a> [azure\_automation\_approle\_backend\_path](#input\_azure\_automation\_approle\_backend\_path)
+
+Description: (Optional) Path that the Azure HCP Terraform role is allowed to use when creating the Azure automation AppRole auth backend in the intermediate child namespace.
+
+Type: `string`
+
+Default: `"approle"`
+
 ### <a name="input_azure_automation_jwt_backend_path"></a> [azure\_automation\_jwt\_backend\_path](#input\_azure\_automation\_jwt\_backend\_path)
 
 Description: (Optional) Path that the Azure HCP Terraform role is allowed to use when creating the Azure automation JWT/OIDC auth backend in the intermediate child namespace.
@@ -621,6 +629,10 @@ The following outputs are exported:
 ### <a name="output_aws_auth_backend_path"></a> [aws\_auth\_backend\_path](#output\_aws\_auth\_backend\_path)
 
 Description: Path of the AWS auth backend in the intermediate namespace.
+
+### <a name="output_azure_automation_approle_backend_path"></a> [azure\_automation\_approle\_backend\_path](#output\_azure\_automation\_approle\_backend\_path)
+
+Description: Path that the Azure HCP Terraform role is allowed to use when creating the Azure automation AppRole auth backend in the intermediate namespace.
 
 ### <a name="output_azure_automation_jwt_backend_path"></a> [azure\_automation\_jwt\_backend\_path](#output\_azure\_automation\_jwt\_backend\_path)
 
