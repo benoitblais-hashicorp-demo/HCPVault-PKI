@@ -3,9 +3,9 @@ output "aws_auth_backend_path" {
   value       = vault_auth_backend.aws.path
 }
 
-output "azure_devops_jwt_backend_path" {
-  description = "Path that the Azure HCP Terraform role is allowed to use when creating the Azure DevOps JWT/OIDC auth backend in the intermediate namespace."
-  value       = var.azure_devops_jwt_backend_path
+output "azure_automation_jwt_backend_path" {
+  description = "Path that the Azure HCP Terraform role is allowed to use when creating the Azure automation JWT/OIDC auth backend in the intermediate namespace."
+  value       = var.azure_automation_jwt_backend_path
 }
 
 output "azure_kv_v2_mount_path" {

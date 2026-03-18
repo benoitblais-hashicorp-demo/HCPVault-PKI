@@ -264,27 +264,27 @@ path "sys/auth" {
   capabilities = ["read", "list"]
 }
 
-path "sys/auth/${var.azure_devops_jwt_backend_path}" {
+path "sys/auth/${var.azure_automation_jwt_backend_path}" {
   capabilities = ["create", "read", "update", "delete", "sudo"]
 }
 
-path "sys/mounts/auth/${var.azure_devops_jwt_backend_path}" {
+path "sys/mounts/auth/${var.azure_automation_jwt_backend_path}" {
   capabilities = ["create", "read", "update", "delete", "sudo"]
 }
 
-path "sys/mounts/auth/${var.azure_devops_jwt_backend_path}/tune" {
+path "sys/mounts/auth/${var.azure_automation_jwt_backend_path}/tune" {
   capabilities = ["read", "update", "sudo"]
 }
 
-path "auth/${var.azure_devops_jwt_backend_path}/config" {
+path "auth/${var.azure_automation_jwt_backend_path}/config" {
   capabilities = ["create", "read", "update", "delete"]
 }
 
-path "auth/${var.azure_devops_jwt_backend_path}/role" {
+path "auth/${var.azure_automation_jwt_backend_path}/role" {
   capabilities = ["list"]
 }
 
-path "auth/${var.azure_devops_jwt_backend_path}/role/*" {
+path "auth/${var.azure_automation_jwt_backend_path}/role/*" {
   capabilities = ["create", "read", "update", "delete", "list"]
 }
 

@@ -304,13 +304,13 @@ Type: `string`
 
 Default: `"aws"`
 
-### <a name="input_azure_devops_jwt_backend_path"></a> [azure\_devops\_jwt\_backend\_path](#input\_azure\_devops\_jwt\_backend\_path)
+### <a name="input_azure_automation_jwt_backend_path"></a> [azure\_automation\_jwt\_backend\_path](#input\_azure\_automation\_jwt\_backend\_path)
 
-Description: (Optional) Path that the Azure HCP Terraform role is allowed to use when creating the Azure DevOps JWT/OIDC auth backend in the intermediate child namespace.
+Description: (Optional) Path that the Azure HCP Terraform role is allowed to use when creating the Azure automation JWT/OIDC auth backend in the intermediate child namespace.
 
 Type: `string`
 
-Default: `"jwt_azure_devops"`
+Default: `"jwt_workload"`
 
 ### <a name="input_azure_kv_v2_mount_path"></a> [azure\_kv\_v2\_mount\_path](#input\_azure\_kv\_v2\_mount\_path)
 
@@ -622,9 +622,9 @@ The following outputs are exported:
 
 Description: Path of the AWS auth backend in the intermediate namespace.
 
-### <a name="output_azure_devops_jwt_backend_path"></a> [azure\_devops\_jwt\_backend\_path](#output\_azure\_devops\_jwt\_backend\_path)
+### <a name="output_azure_automation_jwt_backend_path"></a> [azure\_automation\_jwt\_backend\_path](#output\_azure\_automation\_jwt\_backend\_path)
 
-Description: Path that the Azure HCP Terraform role is allowed to use when creating the Azure DevOps JWT/OIDC auth backend in the intermediate namespace.
+Description: Path that the Azure HCP Terraform role is allowed to use when creating the Azure automation JWT/OIDC auth backend in the intermediate namespace.
 
 ### <a name="output_azure_kv_v2_mount_path"></a> [azure\_kv\_v2\_mount\_path](#output\_azure\_kv\_v2\_mount\_path)
 
