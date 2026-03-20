@@ -211,6 +211,7 @@ concurrent demos.
 - AWS auth backend for Lambda authentication workflows (`vault_auth_backend`)
 - HCP Terraform JWT auth backend and role (`vault_jwt_auth_backend`, `vault_jwt_auth_backend_role`)
 - JWT AWS admin policy for AWS auth role and ACL policy management (`vault_policy`)
+- JWT Azure admin policy for automation auth/KV/PKI/ACL management (`vault_policy`)
 
 ## Permissions
 
@@ -260,6 +261,7 @@ Documentation:
 - HCP Terraform JWT login path scoped to a single workspace
 - AWS auth backend provisioning for Lambda-oriented authentication flows
 - JWT AWS role policy allowing AWS auth role and ACL policy creation/management
+- JWT Azure role policy allowing automation JWT, AppRole, KV v2, PKI role/cert, and ACL policy management
 - Opinionated defaults with variables for domain, role name, and TTLs
 
 ## Demo Value Proposition
@@ -695,6 +697,8 @@ Description: Child namespace path under the demo namespace for root PKI resource
 
 - [Vault PKI Secrets Engine](https://developer.hashicorp.com/vault/docs/secrets/pki)
 - [Vault AWS Auth Method](https://developer.hashicorp.com/vault/docs/auth/aws)
+- [Vault AppRole Auth Method](https://developer.hashicorp.com/vault/docs/auth/approle)
+- [Vault KV Secrets Engine - Version 2](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2)
 - [Vault Policy Concepts](https://developer.hashicorp.com/vault/docs/concepts/policies)
 - [Vault Provider (Terraform Registry)](https://registry.terraform.io/providers/hashicorp/vault/latest/docs)
 <!-- END_TF_DOCS -->
