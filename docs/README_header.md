@@ -28,6 +28,7 @@ concurrent demos.
 - AWS auth backend for Lambda authentication workflows (`vault_auth_backend`)
 - HCP Terraform JWT auth backend and role (`vault_jwt_auth_backend`, `vault_jwt_auth_backend_role`)
 - JWT AWS admin policy for AWS auth role and ACL policy management (`vault_policy`)
+- JWT Azure admin policy for automation auth/KV/PKI/ACL management (`vault_policy`)
 
 ## Permissions
 
@@ -77,6 +78,7 @@ Documentation:
 - HCP Terraform JWT login path scoped to a single workspace
 - AWS auth backend provisioning for Lambda-oriented authentication flows
 - JWT AWS role policy allowing AWS auth role and ACL policy creation/management
+- JWT Azure role policy allowing automation JWT, AppRole, KV v2, PKI role/cert, and ACL policy management
 - Opinionated defaults with variables for domain, role name, and TTLs
 
 ## Demo Value Proposition
